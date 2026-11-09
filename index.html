@@ -1,0 +1,881 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>CHM 215 Revision</title>
+<style>
+:root{--bg:#f4f5f9;--card:#fff;--fg:#1a1c22;--muted:#5f6677;--line:#d5d9e3;--acc:#2f5bea;--accfg:#fff;--ok:#17803a;--okbg:#e5f5ea;--bad:#c22b2b;--badbg:#fdecec;--sel:#dfe7ff;--lp:#d6336c}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#111317;--card:#1b1e25;--fg:#e9ebf1;--muted:#9aa2b4;--line:#333846;--acc:#7d9bff;--accfg:#0b0d12;--ok:#5fd583;--okbg:#14301d;--bad:#ff8080;--badbg:#3b1a1a;--sel:#26324f;--lp:#ff6fa3}}
+:root[data-theme=dark]{--bg:#111317;--card:#1b1e25;--fg:#e9ebf1;--muted:#9aa2b4;--line:#333846;--acc:#7d9bff;--accfg:#0b0d12;--ok:#5fd583;--okbg:#14301d;--bad:#ff8080;--badbg:#3b1a1a;--sel:#26324f;--lp:#ff6fa3}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;font:17px/1.45 -apple-system,system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--fg)}
+header{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:10px;padding:8px 16px;padding-top:max(8px,env(safe-area-inset-top));background:var(--card);border-bottom:1px solid var(--line)}
+header b{flex:1;font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+main{max-width:920px;margin:0 auto;padding:16px}
+a{color:var(--acc)}
+button,.btn{font:inherit;color:var(--fg);background:var(--card);border:1px solid var(--line);border-radius:12px;min-height:48px;padding:10px 16px;cursor:pointer;touch-action:manipulation;text-decoration:none;display:inline-block;text-align:center;vertical-align:middle;-webkit-tap-highlight-color:transparent}
+button svg.mol{margin:0 auto}
+button:disabled{opacity:.55;cursor:default}
+button.primary{background:var(--acc);color:var(--accfg);border-color:var(--acc);font-weight:600}
+button.on{background:var(--sel);border-color:var(--acc);font-weight:600}
+button.ghost{border:none;background:transparent;min-width:48px}
+.row{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.row>button{flex:1 1 auto}
+.skiprow{display:flex;justify-content:flex-end;margin:6px 0 0}
+.skiprow button{min-width:120px;color:var(--muted)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.tile{display:block;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;color:var(--fg);text-decoration:none;min-height:96px}
+.tile b{display:block;font-size:19px;margin-bottom:4px}
+.tile span{color:var(--muted);font-size:15px}
+.muted{color:var(--muted)} .small{font-size:14px}
+.struct{display:flex;justify-content:center;align-items:center;padding:6px 0;overflow-x:auto}
+svg.mol{max-width:100%;height:auto;display:block}
+svg.mol text{stroke:none}
+svg.mol .lp{fill:var(--lp)} svg.mol .chg{fill:var(--lp)}
+input[type=text],input[type=number]{font:inherit;font-size:19px;width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--fg);min-height:52px}
+.lbl{display:block;font-weight:600;margin:8px 0 6px}
+.prompt{font-size:22px;font-weight:700;text-align:center;margin:6px 0 10px}
+.fb{border-radius:12px;padding:12px 14px;margin-top:12px}
+.fb.ok{background:var(--okbg)} .fb.bad{background:var(--badbg)}
+.fbhead{font-weight:700;font-size:19px}
+.fb.ok .fbhead{color:var(--ok)} .fb.bad .fbhead{color:var(--bad)}
+.fb p{margin:6px 0}
+.why{font-weight:500}
+.qtop{display:flex;justify-content:space-between;gap:8px;font-size:14px;margin-bottom:4px}
+.pill{background:var(--sel);border-radius:99px;padding:2px 10px;font-size:13px}
+.choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:10px 0}
+.choices.m1{grid-template-columns:repeat(auto-fit,minmax(110px,1fr))}
+.choices.svgopts{grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
+.choices button{min-height:56px;padding:14px 12px}
+.choices button.right{background:var(--okbg);border-color:var(--ok)} .choices button.wrong{background:var(--badbg);border-color:var(--bad)}
+.rxn{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:10px}
+.mol .tapc{fill:transparent;stroke:none;pointer-events:none}
+.tapmode .mol .tapc{pointer-events:all;cursor:pointer;fill:var(--acc);fill-opacity:.12;stroke:var(--acc);stroke-width:.035;stroke-dasharray:.08 .07}
+.tapmode .mol .tapc.on{fill-opacity:.5;stroke-dasharray:none;stroke-width:.06}
+.mol .tapc.good{fill:var(--ok);fill-opacity:.45;stroke:var(--ok);stroke-width:.06;stroke-dasharray:none}
+.mol .tapc.bad{fill:var(--bad);fill-opacity:.45;stroke:var(--bad);stroke-width:.06;stroke-dasharray:none}
+.tapnote{color:var(--acc)}
+.arrow{text-align:center;min-width:150px;font-weight:600;font-size:19px}
+.arrow .arr{font-size:30px;line-height:1;transform:scaleX(1.8)}
+.qmark{font-size:30px;font-weight:700;color:var(--muted)}
+.plus{font-size:30px;font-weight:700}
+.fx{font-size:24px;font-weight:700;padding:6px 4px}
+.arrow .to{font-size:22px;font-weight:700;padding:0 18px}
+.arrow .ast{display:inline-block;vertical-align:middle}
+.qline{font-size:18px;font-weight:600;margin:4px 0 8px}
+.formula{font-size:34px;font-weight:700;text-align:center;margin:18px 0}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{border:1px solid var(--line);padding:8px;text-align:center;vertical-align:middle}
+th{background:var(--bg)}
+.tabs button.on{background:var(--acc);color:var(--accfg)}
+.flip{perspective:1200px;cursor:pointer;margin:6px 0 10px}
+.flipin{position:relative;min-height:300px;transition:transform .5s;transform-style:preserve-3d;-webkit-transform-style:preserve-3d}
+.flip.on .flipin{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;backface-visibility:hidden;-webkit-backface-visibility:hidden;text-align:center}
+.face.back{transform:rotateY(180deg)}
+.face .big{font-size:26px;font-weight:700}
+.rules h2{margin:4px 0 8px;font-size:20px}
+.rules ul{padding-left:20px;margin:6px 0} .rules li{margin:4px 0}
+.mini{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.mini>div{text-align:center;font-size:14px;font-weight:600;background:var(--bg);border-radius:12px;padding:6px}
+.pass{color:var(--ok);font-weight:700} .fail{color:var(--bad);font-weight:700}
+.examhead{display:flex;justify-content:space-between;align-items:center;font-size:17px;margin-bottom:8px}
+@media (max-width:560px){main{padding:12px} .formula{font-size:28px}}
+</style>
+</head>
+<body>
+<header><button id="homeBtn" class="ghost" aria-label="Menu">☰</button><b id="ttl">CHM 215</b><span id="score" class="muted small"></span><button id="themeBtn" class="ghost" aria-label="Light/dark">◐</button></header>
+<main id="app"></main>
+<script>
+'use strict';
+/* ================= utilities ================= */
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+// chemistry formatter: subscripts digits in formulas (CH3, SO3H...) but not S_N1/E2
+function fmt(s){return esc(s).replace(/\bpKa\b/g,'pK\u0002').replace(/\bS[Nn]([12])\b/g,'S\u0003$1').replace(/\bE([12])\b/g,'\u0001$1')
+ .replace(/([A-Za-z\)])(\d+)/g,'$1<sub>$2</sub>').replace(/\u0001(\d)/g,'E$1').replace(/\u0003/g,'<sub>N</sub>').replace(/\u0002/g,'<sub>a</sub>');}
+const MECH={SN1:'S<sub>N</sub>1',SN2:'S<sub>N</sub>2',E1:'E1',E2:'E2',NR:'N.R.'};
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+const f2=n=>Math.round(n*1000)/1000;
+
+/* ================= storage ================= */
+const SKEY='chm215-revision-v1';
+let DB=null;
+function loadDB(){try{const s=localStorage.getItem(SKEY);if(s)DB=JSON.parse(s);}catch(e){DB=null}
+ const v=DB&&DB.items?(DB.v||1):0;DB=upgradeDB(DB);if(v!==DB.v)saveDB();}
+function upgradeDB(db){if(!db||!db.items)return{items:{},modes:{},v:3};
+ if((db.v||1)<2){for(const [o,n] of Object.entries(MIGRATE)){const s=db.items[o];if(!s)continue;const t=db.items[n];
+  db.items[n]=t?{a:t.a+s.a,c:t.c+s.c,s:Math.min(t.s,s.s),w:t.w+s.w,m:(t.m||s.m)?1:0}:s;delete db.items[o];}db.v=2;}
+ // v3: there is no pre-loaded list any more, so un-flag anything that was never actually answered wrong
+ if(db.v<3){for(const id in db.items){const s=db.items[id];if(s&&s.m&&!s.w)s.m=0;}db.v=3;}
+ return db;}
+function saveDB(){try{localStorage.setItem(SKEY,JSON.stringify(DB));}catch(e){}}
+const st0=id=>DB.items[id]||{a:0,c:0,s:0,w:0,m:0};
+function record(item,ok,mode){const s=DB.items[item.id]||(DB.items[item.id]={a:0,c:0,s:0,w:0,m:0});let msg='';s.a++;
+ if(ok){s.c++;s.s++;if(s.m&&s.s>=3){s.m=0;msg='mastered';}}else{s.w++;s.s=0;if(!s.m){s.m=1;msg='added';}}
+ for(const k of [mode,'t:'+item.type]){const m=DB.modes[k]||(DB.modes[k]={a:0,c:0});m.a++;if(ok)m.c++;}
+ saveDB();return msg;}
+const mistakeIds=()=>Object.keys(DB.items).filter(id=>DB.items[id].m&&getItem(id));
+
+/* ================= geometry / ring templates ================= */
+const D2R=Math.PI/180,SQ3=Math.sqrt(3),FS=0.42;
+const rot=(v,deg)=>{const a=deg*D2R,c=Math.cos(a),s=Math.sin(a);return{x:v.x*c-v.y*s,y:v.x*s+v.y*c};};
+const unit=v=>{const l=Math.hypot(v.x,v.y)||1;return{x:v.x/l,y:v.y/l};};
+const centroid=p=>{let x=0,y=0;p.forEach(q=>{x+=q.x;y+=q.y});return{x:x/p.length,y:y/p.length};};
+function polyPts(n,cx,cy,start){const R=1/(2*Math.sin(Math.PI/n)),o=[];for(let i=0;i<n;i++){const a=(start+i*360/n)*D2R;o.push({x:cx+R*Math.cos(a),y:cy+R*Math.sin(a)});}return o;}
+function polyOnEdge(P,Q,n,away){ // regular n-gon built on edge P-Q, on the side away from point "away"
+ const M={x:(P.x+Q.x)/2,y:(P.y+Q.y)/2},dx=Q.x-P.x,dy=Q.y-P.y,s=Math.hypot(dx,dy);let nx=-dy/s,ny=dx/s;
+ if((away.x-M.x)*nx+(away.y-M.y)*ny>0){nx=-nx;ny=-ny;}
+ const h=s/(2*Math.tan(Math.PI/n)),C={x:M.x+nx*h,y:M.y+ny*h},R=s/(2*Math.sin(Math.PI/n));
+ const aP=Math.atan2(P.y-C.y,P.x-C.x),aQ=Math.atan2(Q.y-C.y,Q.x-C.x);let st=aQ-aP;while(st>Math.PI)st-=2*Math.PI;while(st<-Math.PI)st+=2*Math.PI;
+ const o=[];for(let k=0;k<n;k++){const a=aP+k*st;o.push({x:C.x+R*Math.cos(a),y:C.y+R*Math.sin(a)});}return o;}
+// ring vertex numbering: hexagon v0=top, v1=upper-right, v2=lower-right, v3=bottom, v4=lower-left, v5=upper-left
+// 5-ring (start 90): v0=bottom (heteroatom), v1=lower-left, v2=upper-left, v3=upper-right, v4=lower-right
+const TPL_SPECS={
+ benzene:{title:'Benzene',desc:'6-membered ring of carbons.',rings:[{n:6}],dbl:[[0,0,1],[0,2,3],[0,4,5]]},
+ pyridine:{title:'Pyridine',desc:'Pyridine is a 6-membered ring with N= (no H).',rings:[{n:6}],dbl:[[0,0,1],[0,2,3],[0,4,5]],atoms:{'0:3':{label:'N',lp:[0]}}},
+ pyrrole:{title:'Pyrrole',desc:'Pyrrole is a 5-membered ring with N–H.',rings:[{n:5,start:90}],dbl:[[0,1,2],[0,3,4]],atoms:{'0:0':{label:'N',exo:'H',lp:[62]}}},
+ furan:{title:'Furan',desc:'Furan is a 5-membered ring with O.',rings:[{n:5,start:90}],dbl:[[0,1,2],[0,3,4]],atoms:{'0:0':{label:'O',lp:[-58,58]}}},
+ thiophene:{title:'Thiophene',desc:'Thiophene is a 5-membered ring with S.',rings:[{n:5,start:90}],dbl:[[0,1,2],[0,3,4]],atoms:{'0:0':{label:'S',lp:[-58,58]}}},
+ thiepin:{title:'Thiepin',rings:[{n:7}],dbl:[[0,1,2],[0,3,4],[0,5,6]],atoms:{'0:0':{label:'S',lp:[-58,58]}}},
+ dithiin:{title:'1,4-Dithiin',rings:[{n:6}],dbl:[[0,1,2],[0,4,5]],atoms:{'0:0':{label:'S',lp:[-58,58]},'0:3':{label:'S',lp:[-58,58]}}},
+ dioxin:{title:'1,4-Dioxin',rings:[{n:6}],dbl:[[0,1,2],[0,4,5]],atoms:{'0:0':{label:'O',lp:[-58,58]},'0:3':{label:'O',lp:[-58,58]}}},
+ cyclobutadiene:{title:'Cyclobutadiene',rings:[{n:4,start:-135}],dbl:[[0,0,1],[0,2,3]]},
+ cp_anion:{title:'Cyclopentadienyl anion',rings:[{n:5}],dbl:[[0,1,2],[0,3,4]],atoms:{'0:0':{charge:'−',lp:[0]}}},
+ cp_cation:{title:'Cyclopentadienyl cation',rings:[{n:5}],dbl:[[0,1,2],[0,3,4]],atoms:{'0:0':{charge:'+'}}},
+ cp_radical:{title:'Cyclopentadienyl radical',rings:[{n:5}],dbl:[[0,1,2],[0,3,4]],atoms:{'0:0':{radical:true}}},
+ cyclopentadiene:{title:'Cyclopentadiene',rings:[{n:5}],dbl:[[0,1,2],[0,3,4]],atoms:{'0:0':{hh:true}}},
+ c3_anion:{title:'Cyclopropenyl anion',rings:[{n:3}],dbl:[[0,1,2]],atoms:{'0:0':{charge:'−',lp:[0]}}},
+ c3_cation:{title:'Cyclopropenyl cation',rings:[{n:3}],dbl:[[0,1,2]],atoms:{'0:0':{charge:'+'}}},
+ tropylium:{title:'Tropylium (cycloheptatrienyl cation)',rings:[{n:7}],dbl:[[0,1,2],[0,3,4],[0,5,6]],atoms:{'0:0':{charge:'+'}}},
+ cycloheptatriene:{title:'Cycloheptatriene',rings:[{n:7}],dbl:[[0,1,2],[0,3,4],[0,5,6]],atoms:{'0:0':{hh:true}}},
+ cot:{title:'Cyclooctatetraene',rings:[{n:8,start:-112.5}],dbl:[[0,0,1],[0,2,3],[0,4,5],[0,6,7]]},
+ anthracene:{title:'Anthracene',rings:[{n:6},{n:6,cx:SQ3},{n:6,cx:2*SQ3}],dbl:[[0,5,0],[0,3,4],[0,1,2],[1,0,1],[1,2,3],[2,0,1],[2,2,3]]},
+ diazaanthracene:{title:'Diaza-anthracene (from your exam)',rings:[{n:6},{n:6,cx:SQ3},{n:6,cx:2*SQ3}],dbl:[[0,5,0],[0,3,4],[0,1,2],[1,0,1],[1,2,3],[2,0,1],[2,2,3]],atoms:{'0:3':{label:'N',lp:[0]},'2:3':{label:'N',lp:[0]}}},
+ benzocyclobutadiene:{title:'Benzocyclobutadiene',rings:[{n:6},{n:4,on:[0,1,2]}],dbl:[[0,1,2],[0,3,4],[0,5,0],[1,2,3]]},
+ benzocycloheptadiene:{title:'Benzene fused to a 7-ring with a CH₂',rings:[{n:6},{n:7,on:[0,1,2]}],dbl:[[0,1,2],[0,3,4],[0,5,0],[1,3,4],[1,5,6]],atoms:{'1:2':{hh:true}}},
+ indole:{title:'Indole',rings:[{n:6},{n:5,on:[0,1,2]}],dbl:[[0,1,2],[0,3,4],[0,5,0],[1,2,3]],atoms:{'1:4':{label:'N',exo:'H',lp:[62]}}},
+ nmethylindole:{title:'N-Methylindole',rings:[{n:6},{n:5,on:[0,1,2]}],dbl:[[0,1,2],[0,3,4],[0,5,0],[1,2,3]],atoms:{'1:4':{label:'N',exo:'CH3',lp:[62]}}},
+ imidazole:{title:'Imidazole',rings:[{n:5,start:90}],dbl:[[0,1,2],[0,3,4]],atoms:{'0:0':{label:'N',exo:'H',lp:[62]},'0:3':{label:'N',lp:[0]}}},
+ borole:{title:'1-Methylborole',rings:[{n:5,start:90}],dbl:[[0,1,2],[0,3,4]],atoms:{'0:0':{label:'B',exo:'CH3'}}},
+ quinolinium:{title:'Quinolinium ion (from your exam)',rings:[{n:6},{n:6,cx:SQ3}],dbl:[[0,5,0],[0,3,4],[0,1,2],[1,0,1],[1,2,3]],atoms:{'1:3':{label:'N',exo:'H',charge:'+',chgRot:-60}}},
+ cyclohexene:{title:'Cyclohexene',rings:[{n:6}],dbl:[[0,0,1]]},
+ cyclohexane:{title:'Cyclohexane',rings:[{n:6}]},
+ chd:{title:'1,3-Cyclohexadiene',rings:[{n:6}],dbl:[[0,0,1],[0,2,3]]},
+};
+const TPL={};
+function T(k){return TPL[k]||(TPL[k]=buildTpl(TPL_SPECS[k]));}
+function buildTpl(spec){
+ const rings=[];
+ for(const r of spec.rings){const b=r.on?rings[r.on[0]]:null;
+  const pts=b?polyOnEdge(b.pts[r.on[1]],b.pts[r.on[2]],r.n,b.c):polyPts(r.n,r.cx||0,r.cy||0,r.start===undefined?-90:r.start);
+  rings.push({pts,c:centroid(pts)});}
+ const atoms=[],km={};
+ rings.forEach((r,ri)=>{r.ids=r.pts.map((p,vi)=>{let id=atoms.findIndex(a=>Math.hypot(a.x-p.x,a.y-p.y)<0.01);
+  if(id<0){id=atoms.length;atoms.push({x:p.x,y:p.y,rings:[]});}atoms[id].rings.push(ri);km[ri+':'+vi]=id;return id;});});
+ const bonds=[],bm={},bk=(a,b)=>Math.min(a,b)+'-'+Math.max(a,b);
+ rings.forEach(r=>r.ids.forEach((a,i)=>{const b=r.ids[(i+1)%r.ids.length],k=bk(a,b);if(!bm[k]){bm[k]={a,b,o:1};bonds.push(bm[k]);}}));
+ (spec.dbl||[]).forEach(([ri,i,j])=>{const b=bm[bk(km[ri+':'+i],km[ri+':'+j])];b.o=2;b.c=rings[ri].c;});
+ for(const k in (spec.atoms||{}))Object.assign(atoms[km[k]],spec.atoms[k]);
+ atoms.forEach(a=>{const c=centroid(a.rings.map(i=>rings[i].c));a.cx=c.x;a.cy=c.y;});
+ const subPos=atoms.map((a,i)=>i).filter(i=>atoms[i].rings.length===1&&!atoms[i].label&&!atoms[i].charge&&!atoms[i].hh&&!atoms[i].radical);
+ return {atoms,bonds,rings,subPos,title:spec.title,desc:spec.desc||''};
+}
+
+/* ================= substituents & renderer ================= */
+const SUBS={
+ CH3:{r:'CH3',l:'H3C'},CH2CH3:{r:'CH2CH3',l:'CH3CH2'},'CH(CH3)2':{r:'CH(CH3)2',l:'(CH3)2CH'},
+ OH:{r:'OH',l:'HO'},NH2:{r:'NH2',l:'H2N'},OCH3:{r:'OCH3',l:'H3CO'},NO2:{r:'NO2',l:'O2N'},
+ F:{r:'F',l:'F'},Cl:{r:'Cl',l:'Cl'},Br:{r:'Br',l:'Br'},I:{r:'I',l:'I'},
+ CHO:{draw:'cho',r:'CHO',l:'OHC'},COOH:{r:'CO2H',l:'HO2C'},SO3H:{r:'SO3H',l:'HO3S'},
+ 'CH=CH2':{draw:'vinyl',r:'CH=CH2',l:'H2C=CH'},CN:{r:'CN',l:'NC'},CH2CHO:{r:'CH2CHO',l:'OHCCH2'},
+ SO2Cl:{r:'SO2Cl',l:'ClO2S'},'SO2-':{r:'SO2–',l:'–O2S'},H:{r:'H',l:'H'}
+};
+function runs(s){const o=[];let prev='';for(const ch of s){const sub=/\d/.test(ch)&&/[A-Za-z\)\d]/.test(prev)&&(o.length&&(o[o.length-1].t==='s'||/[A-Za-z\)]/.test(prev)));
+ const t=sub?'s':'n';if(o.length&&o[o.length-1].t===t)o[o.length-1].s+=ch;else o.push({t,s:ch});prev=ch;}return o;}
+function chW(ch,t){if(t==='s')return .42;if(/[A-Z]/.test(ch))return .66;if(/[a-z]/.test(ch))return .5;if(/[()]/.test(ch))return .33;if(ch==='=')return .58;return .55;}
+const textW=(s,size)=>runs(s).reduce((w,r)=>w+[...r.s].reduce((a,ch)=>a+chW(ch,r.t),0)*size,0);
+const firstW=(s,size)=>{const m=s.match(/^[A-Z][a-z]?|^./);return textW(m?m[0]:s,size);};
+function tspans(s,size){const d=f2(size*0.25),sm=f2(size*0.72);let out='',inSub=false;
+ for(const r of runs(s)){if(r.t==='s'){out+=`<tspan dy="${d}" font-size="${sm}">${esc(r.s)}</tspan>`;inSub=true;}else{out+=inSub?`<tspan dy="-${d}">${esc(r.s)}</tspan>`:esc(r.s);inSub=false;}}
+ return out;}
+class Draw{
+ constructor(){this.el=[];this.b={x0:1e9,y0:1e9,x1:-1e9,y1:-1e9};}
+ ext(x,y){const b=this.b;b.x0=Math.min(b.x0,x);b.y0=Math.min(b.y0,y);b.x1=Math.max(b.x1,x);b.y1=Math.max(b.y1,y);}
+ line(x1,y1,x2,y2){this.el.push(`<line x1="${f2(x1)}" y1="${f2(y1)}" x2="${f2(x2)}" y2="${f2(y2)}"/>`);this.ext(x1,y1);this.ext(x2,y2);}
+ text(x,y,s,anchor='middle',size=FS,cls=''){const w=textW(s,size);const x0=anchor==='start'?x:anchor==='end'?x-w:x-w/2;
+  this.ext(x0,y-size*.62);this.ext(x0+w,y+size*.62);
+  this.el.push(`<text x="${f2(x)}" y="${f2(y+size*.36)}" text-anchor="${anchor}" font-size="${f2(size)}"${cls?` class="${cls}"`:''}>${tspans(s,size)}</text>`);}
+ dot(x,y,r,cls=''){this.el.push(`<circle cx="${f2(x)}" cy="${f2(y)}" r="${r}" stroke="none"${cls?` class="${cls}"`:''}/>`);this.ext(x-r,y-r);this.ext(x+r,y+r);}
+ bond(P,Q,tp=0,tq=0){const t=unit({x:Q.x-P.x,y:Q.y-P.y});this.line(P.x+t.x*tp,P.y+t.y*tp,Q.x-t.x*tq,Q.y-t.y*tq);}
+ inner(P,Q,c,tp,tq){const t=unit({x:Q.x-P.x,y:Q.y-P.y});let n={x:-t.y,y:t.x};const m={x:(P.x+Q.x)/2,y:(P.y+Q.y)/2};
+  if((c.x-m.x)*n.x+(c.y-m.y)*n.y<0)n={x:-n.x,y:-n.y};const o=.16,s1=Math.max(.17,tp+.04),s2=Math.max(.17,tq+.04);
+  this.line(P.x+n.x*o+t.x*s1,P.y+n.y*o+t.y*s1,Q.x+n.x*o-t.x*s2,Q.y+n.y*o-t.y*s2);}
+ dblAcyc(P,Q,tp=0,tq=0){this.bond(P,Q,tp,tq);const t=unit({x:Q.x-P.x,y:Q.y-P.y}),n={x:-t.y,y:t.x},o=.13;
+  this.line(P.x+n.x*o+t.x*(tp+.06),P.y+n.y*o+t.y*(tp+.06),Q.x+n.x*o-t.x*(tq+.06),Q.y+n.y*o-t.y*(tq+.06));}
+ lpair(a,dir){const p={x:a.x+dir.x*.36,y:a.y+dir.y*.36},n={x:-dir.y,y:dir.x};this.dot(p.x+n.x*.075,p.y+n.y*.075,.045,'lp');this.dot(p.x-n.x*.075,p.y-n.y*.075,.045,'lp');}
+ sub(A,d,key,trim){const S=SUBS[key]||{r:key,l:key};const a0={x:A.x+d.x*trim,y:A.y+d.y*trim};
+  if(S.draw==='cho'){const C={x:A.x+d.x,y:A.y+d.y};this.line(a0.x,a0.y,C.x,C.y);let dO=rot(d,-60),dH=rot(d,60);
+   if(dO.y>dH.y+1e-6||(Math.abs(dO.y-dH.y)<1e-6&&dO.x>dH.x))[dO,dH]=[dH,dO];
+   const O={x:C.x+dO.x*.9,y:C.y+dO.y*.9};this.dblAcyc(C,O,0,.28);this.text(O.x,O.y,'O');
+   const H={x:C.x+dH.x*.82,y:C.y+dH.y*.82};this.bond(C,H,0,.24);this.text(H.x,H.y,'H');return;}
+  if(S.draw==='vinyl'){const B={x:A.x+d.x,y:A.y+d.y};this.line(a0.x,a0.y,B.x,B.y);let dv=rot(d,-60);if(rot(d,60).y<dv.y)dv=rot(d,60);
+   const C={x:B.x+dv.x,y:B.y+dv.y};this.dblAcyc(B,C);return;}
+  const vertical=Math.abs(d.x)<=.35,lab=(d.x<-.35)?S.l:S.r;
+  if(vertical){const e={x:A.x+d.x*.82,y:A.y+d.y*.82};this.line(a0.x,a0.y,e.x,e.y);
+   this.text(A.x+d.x*1.12-firstW(lab,FS)/2,A.y+d.y*1.12,lab,'start');}
+  else{const e={x:A.x+d.x*.9,y:A.y+d.y*.9};this.line(a0.x,a0.y,e.x,e.y);const tx=A.x+d.x*.98,ty=A.y+d.y*1.0;
+   if(d.x>0)this.text(tx-.02,ty,lab,'start');else this.text(tx+.02,ty,lab,'end');}}
+ ring(s,opt){const t=T(s.tpl),A=t.atoms;
+  t.bonds.forEach(b=>{const P=A[b.a],Q=A[b.b],tp=P.label?.28:0,tq=Q.label?.28:0;this.bond(P,Q,tp,tq);if(b.o===2)this.inner(P,Q,b.c,tp,tq);});
+  A.forEach(a=>{const d=unit({x:a.x-a.cx,y:a.y-a.cy});
+   if(a.label)this.text(a.x,a.y,a.label);
+   if(a.exo)this.sub(a,d,a.exo,a.label?.28:0);
+   if(opt.showLP&&a.lp)a.lp.forEach(g=>this.lpair(a,rot(d,g)));
+   if(a.charge){const cr=a.chgRot!==undefined,v=rot(d,cr?a.chgRot:(a.lp&&opt.showLP?58:0)),r=(cr||(a.lp&&opt.showLP))?.5:.36;this.text(a.x+v.x*r,a.y+v.y*r,a.charge,'middle',.4,'chg');}
+   if(a.radical)this.dot(a.x+d.x*.28,a.y+d.y*.28,.06,'lp');
+   if(a.hh)[-38,38].forEach(g=>{const v=rot(d,g);this.line(a.x,a.y,a.x+v.x*.5,a.y+v.y*.5);this.text(a.x+v.x*.74,a.y+v.y*.74,'H','middle',.34);});});
+  for(const k in (s.subs||{})){const a=A[+k];if(!a)continue;const d=unit({x:a.x-a.cx,y:a.y-a.cy});this.sub(a,d,s.subs[k],a.label?.28:0);}}
+ chain(arr){let x=0;const y=0,n=arr.length;
+  arr.forEach((p,i)=>{const first=i===0&&n>1;let lab=p,sp=null;
+   if(p==='CH3')lab=first?'H3C':'CH3';else if(p==='CH2CH3')lab=first?'CH3CH2':'CH2CH3';else if(p==='CF3')lab=first?'F3C':'CF3';
+   else if(p==='NMe2')lab=first?'(CH3)2N':'N(CH3)2';else if(p==='SO2'||p==='SO'){lab='S';sp=p;}else if(p==='CO'){lab='C';sp='CO';}else if(p==='bond')lab=null;
+   if(i>0){this.line(x+.07,y,x+.55,y);x+=.62;}
+   if(lab===null)return;
+   const w=textW(lab,FS);this.text(x,y,lab,'start');
+   if(sp){const cx=x+w/2;[[-1]].concat(sp==='SO2'?[[1]]:[]).forEach(([sg])=>{this.line(cx-.06,y+sg*.3,cx-.06,y+sg*.88);this.line(cx+.06,y+sg*.3,cx+.06,y+sg*.88);this.text(cx,y+sg*1.12,'O');});}
+   x+=w;});}
+ taps(m){const r=.36;m.a.forEach((a,i)=>{if(a[2])return;this.el.push(`<circle class="tapc" data-a="${i}" cx="${f2(a[0])}" cy="${f2(a[1])}" r="${r}"/>`);this.ext(a[0]-r,a[1]-r);this.ext(a[0]+r,a[1]+r);});}
+ mol(m){const at=m.a.map(a=>({x:a[0],y:a[1],label:a[2]}));
+  m.b.forEach(([a,b,o])=>{const P=at[a],Q=at[b],tp=P.label?.3:0,tq=Q.label?.3:0;if(o===2)this.dblAcyc(P,Q,tp,tq);else this.bond(P,Q,tp,tq);});
+  at.forEach(a=>{if(a.label)this.text(a.x,a.y,a.label);});}
+ svg(scale=46,view=null,extra=''){const pad=.22;let x0,y0,w,h;
+  if(view)[x0,y0,w,h]=view;else{x0=this.b.x0-pad;y0=this.b.y0-pad;w=this.b.x1-this.b.x0+2*pad;h=this.b.y1-this.b.y0+2*pad;}
+  return `<svg class="mol" xmlns="http://www.w3.org/2000/svg" viewBox="${f2(x0)} ${f2(y0)} ${f2(w)} ${f2(h)}" width="${Math.round(w*scale)}" height="${Math.round(h*scale)}" stroke="currentColor" stroke-width="0.055" stroke-linecap="round" fill="currentColor" font-family="Helvetica Neue,Helvetica,Arial,sans-serif" font-weight="600">${this.el.join('')}${extra}</svg>`;}
+}
+const MOLS={
+ PrBr:{a:[[0,.5],[.866,0],[1.732,.5],[2.598,0,'Br']],b:[[0,1],[1,2],[2,3]]},
+ PrCl:{a:[[0,.5],[.866,0],[1.732,.5],[2.598,0,'Cl']],b:[[0,1],[1,2],[2,3]]},
+ PrI:{a:[[0,.5],[.866,0],[1.732,.5],[2.598,0,'I']],b:[[0,1],[1,2],[2,3]]},
+ propenylI:{a:[[0,.5],[.866,0],[1.732,.5],[2.598,0,'I']],b:[[0,1],[1,2,2],[2,3]]},
+ propenylCl:{a:[[0,.5],[.866,0],[1.732,.5],[2.598,0,'Cl']],b:[[0,1],[1,2,2],[2,3]]},
+ BuCl:{a:[[0,0],[.866,.5],[1.732,0],[2.598,.5],[3.464,0,'Cl']],b:[[0,1],[1,2],[2,3],[3,4]]},
+ iBuBr:{a:[[0,.5],[.866,0],[.866,-1],[1.732,.5],[2.598,0,'Br']],b:[[0,1],[1,2],[1,3],[3,4]]},
+ iPrBr:{a:[[0,.5],[.866,0],[1.732,.5],[.866,-1,'Br']],b:[[0,1],[1,2],[1,3]]},
+ iPrCl:{a:[[0,.5],[.866,0],[1.732,.5],[.866,-1,'Cl']],b:[[0,1],[1,2],[1,3]]},
+ sBuBr:{a:[[0,.5],[.866,0],[.866,-1,'Br'],[1.732,.5],[2.598,0]],b:[[0,1],[1,2],[1,3],[3,4]]},
+ BrMeBu:{a:[[0,.5],[.866,0],[.866,-1,'Br'],[1.732,.5],[1.732,1.5],[2.598,0]],b:[[0,1],[1,2],[1,3],[3,4],[3,5]]},
+ tBuBr:{a:[[0,0],[-1,0],[1,0],[0,1],[0,-1,'Br']],b:[[0,1],[0,2],[0,3],[0,4]]},
+ tBuCl:{a:[[0,0],[-1,0],[1,0],[0,1],[0,-1,'Cl']],b:[[0,1],[0,2],[0,3],[0,4]]},
+ tAmBr:{a:[[0,0],[1,0],[1,-1,'Br'],[1,1],[1.866,.5],[2.732,0]],b:[[0,1],[1,2],[1,3],[1,4],[4,5]]},
+ vinylCl:{a:[[0,.5],[.866,0],[1.732,.5,'Cl']],b:[[0,1,2],[1,2]]},
+ isopropenylCl:{a:[[0,0],[-.866,.5],[.866,.5],[0,-1,'Cl']],b:[[0,1,2],[0,2],[0,3]]},
+ propenylBr:{a:[[0,.5],[.866,0],[1.732,.5],[2.598,0,'Br']],b:[[0,1],[1,2,2],[2,3]]},
+ tAmCl:{a:[[0,0],[1,0],[1,-1,'Cl'],[1,1],[1.866,.5],[2.732,0]],b:[[0,1],[1,2],[1,3],[1,4],[4,5]]},
+ sBuCl:{a:[[0,.5],[.866,0],[.866,-1,'Cl'],[1.732,.5],[2.598,0]],b:[[0,1],[1,2],[1,3],[3,4]]},
+ pent3Cl:{a:[[0,0],[.866,.5],[1.732,0],[1.732,-1,'Cl'],[2.598,.5],[3.464,0]],b:[[0,1],[1,2],[2,3],[2,4],[4,5]]},
+ epox:{a:[[0,-.866,'O'],[-.5,0],[.5,0]],b:[[0,1],[0,2],[1,2]]},
+ THF:{a:[[0,-.851,'O'],[.809,-.263],[.5,.688],[-.5,.688],[-.809,-.263]],b:[[0,1],[1,2],[2,3],[3,4],[4,0]]},
+ Et2O:{a:[[0,0],[.866,.5],[1.732,0,'O'],[2.598,.5],[3.464,0]],b:[[0,1],[1,2],[2,3],[3,4]]},
+ EtOH:{a:[[0,.5],[.866,0],[1.732,.5,'O'],[2.45,.05,'H']],b:[[0,1],[1,2],[2,3]]},
+ ClMeCy:{a:[[0,-1],[.866,-.5],[.866,.5],[0,1],[-.866,.5],[-.866,-.5],[-.62,-1.85,'Cl'],[.72,-1.9,'CH3']],b:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,0],[0,6],[0,7]]},
+ CH2Cy:{a:[[0,-1],[.866,-.5],[.866,.5],[0,1],[-.866,.5],[-.866,-.5],[0,-2.1,'CH2']],b:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,0],[0,6,2]]},
+ butadiene:{a:[[.866,-1.5],[0,-1],[0,0],[.866,.5]],b:[[0,1,2],[1,2],[2,3,2]]},
+ vinylOMe:{a:[[0,.5],[.866,0],[1.732,.5,'O'],[2.598,0]],b:[[0,1,2],[1,2],[2,3]]},
+};
+function svgOf(s,opt={}){const d=new Draw();if(s.chain)d.chain(s.chain);else if(s.mol){d.mol(MOLS[s.mol]);if(opt.tap)d.taps(MOLS[s.mol]);}else d.ring(s,opt);return d.svg(opt.scale||46,opt.view||null,opt.extra||'');}
+
+/* ================= compounds (answer keys checked against the Ch 14 slides + your exams) ================= */
+const B=subs=>({tpl:'benzene',subs});
+const C={
+ benzene:{st:B({}),names:['benzene']},
+ chlorobenzene:{st:B({0:'Cl'}),names:['chlorobenzene']},
+ bromobenzene:{st:B({0:'Br'}),names:['bromobenzene']},
+ nitrobenzene:{st:B({0:'NO2'}),names:['nitrobenzene']},
+ phenol:{st:B({0:'OH'}),names:['phenol']},
+ aniline:{st:B({0:'NH2'}),names:['aniline','aminobenzene','benzenamine']},
+ toluene:{st:B({0:'CH3'}),names:['toluene','methylbenzene','phenylmethane']},
+ anisole:{st:B({0:'OCH3'}),names:['anisole','methoxybenzene','methyl phenyl ether']},
+ ethylbenzene:{st:B({0:'CH2CH3'}),names:['ethylbenzene']},
+ benzaldehyde:{st:B({0:'CHO'}),names:['benzaldehyde']},
+ benzoic:{st:B({0:'COOH'}),names:['benzoic acid']},
+ bsa:{st:B({0:'SO3H'}),names:['benzenesulfonic acid']},
+ styrene:{st:B({0:'CH=CH2'}),names:['styrene','vinylbenzene','ethenylbenzene','phenylethene']},
+ oxylene:{st:B({0:'CH3',1:'CH3'}),names:['o-xylene','1,2-dimethylbenzene','2-methyltoluene']},
+ mxylene:{st:B({0:'CH3',2:'CH3'}),names:['m-xylene','1,3-dimethylbenzene','3-methyltoluene']},
+ pxylene:{st:B({0:'CH3',3:'CH3'}),names:['p-xylene','1,4-dimethylbenzene','4-methyltoluene']},
+ mformylbsa:{st:B({0:'SO3H',2:'CHO'}),names:['m-formylbenzenesulfonic acid','3-methanoylbenzenesulfonic acid']},
+ manisic:{st:B({0:'COOH',2:'OCH3'}),names:['m-anisic acid','3-methoxybenzoic acid']},
+ clnitroanisole:{st:B({0:'OCH3',5:'NO2',2:'Cl'}),names:['5-chloro-2-nitroanisole','4-chloro-2-methoxy-1-nitrobenzene']},
+ dibromoaniline:{st:B({0:'NH2',2:'Br',4:'Br'}),names:['3,5-dibromoaniline','3,5-dibromobenzenamine']},
+ tnt:{st:B({0:'CH3',1:'NO2',3:'NO2',5:'NO2'}),names:['2,4,6-trinitrotoluene','TNT','2-methyl-1,3,5-trinitrobenzene']},
+ picric:{st:B({0:'OH',1:'NO2',3:'NO2',5:'NO2'}),names:['2,4,6-trinitrophenol','picric acid']},
+ onitrophenol:{st:B({0:'OH',1:'NO2'}),names:['o-nitrophenol']},
+ obromophenol:{st:B({0:'OH',1:'Br'}),names:['o-bromophenol']},
+ mbromoanisole:{st:B({0:'OCH3',2:'Br'}),names:['m-bromoanisole','1-bromo-3-methoxybenzene']},
+ quiz8a:{st:B({0:'CH2CHO',3:'SO3H',4:'NO2'}),names:['4-ethanoyl-2-nitrobenzenesulfonic acid','4-formylmethyl-2-nitrobenzenesulfonic acid','2-nitro-4-(2-oxoethyl)benzenesulfonic acid'],
+  note:"Professor's key calls CH2CHO “ethanoyl”. Strict IUPAC: 2-nitro-4-(2-oxoethyl)benzenesulfonic acid. SO3H is the parent (C-1), NO2 is next to it."},
+ pmethylanisole:{st:B({0:'CH3',3:'OCH3'}),names:['p-methylanisole','4-methoxytoluene','1-methoxy-4-methylbenzene'],note:'Only ONE parent: anisole (OCH3) wins over toluene; CH3 becomes the prefix “methyl”.'},
+ clnitrophenol:{st:B({0:'OH',1:'NO2',3:'Cl'}),names:['4-chloro-2-nitrophenol'],note:'OH is C-1 (phenol). Number toward NO2 to get 2,4 (not 2,5 or 4,6).'},
+ brEtBSA:{st:B({0:'CH2CH3',4:'Br',3:'SO3H'}),names:['2-bromo-4-ethylbenzenesulfonic acid']},
+ brEtBenzoic:{st:B({0:'CH2CH3',4:'Br',3:'COOH'}),names:['2-bromo-4-ethylbenzoic acid']},
+ pisopropylanisole:{st:B({0:'CH(CH3)2',3:'OCH3'}),names:['p-isopropylanisole','1-isopropyl-4-methoxybenzene']},
+ mnitroanisole:{st:B({0:'NO2',2:'OCH3'}),names:['m-nitroanisole','1-methoxy-3-nitrobenzene']},
+ mnitroaniline:{st:B({1:'NO2',3:'NH2'}),names:['m-nitroaniline']},
+ pentachloro:{st:B({0:'SO3H',1:'Cl',2:'Cl',3:'Cl',4:'Cl',5:'Cl'}),names:['2,3,4,5,6-pentachlorobenzenesulfonic acid','pentachlorobenzenesulfonic acid']},
+ pyridine:{st:{tpl:'pyridine',subs:{}},names:['pyridine']},
+ pyrrole:{st:{tpl:'pyrrole',subs:{}},names:['pyrrole']},
+ furan:{st:{tpl:'furan',subs:{}},names:['furan']},
+ thiophene:{st:{tpl:'thiophene',subs:{}},names:['thiophene']},
+
+ tosylcl:{st:B({0:'CH3',3:'SO2Cl'}),names:['tosyl chloride','p-toluenesulfonyl chloride','4-methylbenzenesulfonyl chloride','TsCl']},
+ mscl:{st:{chain:['CH3','SO2','Cl']},names:['mesyl chloride','methanesulfonyl chloride','MsCl']},
+ msbr:{st:{chain:['CH3','SO2','Br']},names:['mesyl bromide','methanesulfonyl bromide']},
+ etoms:{st:{chain:['CH3','SO2','O','CH2CH3']},names:['ethyl mesylate','ethyl methanesulfonate'],note:'Ethyl mesylate = CH3SO2–O–CH2CH3 (the O between S and the ethyl is easy to forget).'},
+ tfcl:{st:{chain:['CF3','SO2','Cl']},names:['triflyl chloride','trifyl chloride','trifluoromethanesulfonyl chloride']},
+ ettf:{st:{chain:['CF3','SO2','O','CH2CH3']},names:['ethyl triflate','ethyl trifluoromethanesulfonate']},
+ g_mesyl:{st:{chain:['CH3','SO2','bond']},names:['mesyl (Ms) = methanesulfonyl']},
+ g_tosyl:{st:B({0:'CH3',3:'SO2-'}),names:['tosyl (Ts) = p-toluenesulfonyl']},
+ g_triflyl:{st:{chain:['CF3','SO2','bond']},names:['triflyl (Tf) = trifluoromethanesulfonyl']},
+};
+const NAME_KEYS=['benzene','msbr','chlorobenzene','bromobenzene','nitrobenzene','phenol','aniline','toluene','anisole','ethylbenzene','benzaldehyde','benzoic','bsa','styrene','oxylene','mxylene','pxylene','mformylbsa','manisic','clnitroanisole','dibromoaniline','tnt','picric','onitrophenol','obromophenol','mbromoanisole','quiz8a','pmethylanisole','clnitrophenol','brEtBSA','brEtBenzoic','pisopropylanisole','mnitroanisole','mnitroaniline','pentachloro','pyridine','pyrrole','furan','thiophene','tosylcl','mscl','etoms','tfcl','ettf'];
+// Section 1a = common / trade names (one word, like TNT or toluene); 1b = full names of substituted benzenes
+const COMMON_KEYS=new Set(['benzene','msbr','chlorobenzene','bromobenzene','nitrobenzene','phenol','aniline','toluene','anisole','ethylbenzene','benzaldehyde','benzoic','bsa','styrene','oxylene','mxylene','pxylene','tnt','picric','pyridine','pyrrole','furan','thiophene','tosylcl','mscl','etoms','tfcl','ettf']);
+const FLASH_KEYS=['benzene','toluene','phenol','aniline','anisole','benzaldehyde','benzoic','bsa','styrene','oxylene','mxylene','pxylene','chlorobenzene','nitrobenzene','pyridine','pyrrole','furan','thiophene','tnt','picric','manisic','mscl','msbr','tosylcl','tfcl','etoms','ettf','g_mesyl','g_tosyl','g_triflyl'];
+
+/* ================= aromaticity items ================= */
+const ARL={A:'Aromatic',Anti:'Anti-aromatic',Non:'Non-aromatic'};
+const AROM=[
+ ['benzene','A',6,'3 C=C × 2 = 6 π. Cyclic, planar, fully conjugated; 6 = 4n+2 (n = 1) → aromatic.'],
+ ['pyridine','A',6,'2 C=C + 1 C=N = 6 π. The N lone pair does NOT count: N already has a C=N, its lone pair points out of the ring. 6 = 4n+2 → aromatic.'],
+ ['pyrrole','A',6,'2 C=C = 4, + the N–H lone pair = 2 → 6 π (N has no double bond, so its lone pair is in the ring). Aromatic.'],
+ ['furan','A',6,'2 C=C = 4, + ONE O lone pair = 2 → 6 π (only one of the two O lone pairs counts). Aromatic.'],
+ ['thiophene','A',6,'2 C=C = 4, + ONE S lone pair = 2 → 6 π. Aromatic.'],
+ ['thiepin','Anti',8,'3 C=C = 6, + one S lone pair = 2 → 8 π. 8 = 4n (n = 2) → anti-aromatic. Professor’s rule: just count π electrons (don’t call it non-aromatic because the real ring puckers).'],
+ ['dithiin','Anti',8,'2 C=C = 4, + one lone pair from EACH S = 4 → 8 π = 4n → anti-aromatic (professor’s key, slide 18). Count π only; the puckering of the real molecule doesn’t matter here.'],
+ ['dioxin','Anti',8,'2 C=C = 4, + one lone pair from each O = 4 → 8 π = 4n → anti-aromatic (same idea as 1,4-dithiin).'],
+ ['cp_radical','Non',5,'2 C=C = 4, + 1 unpaired e⁻ = 5 π. 5 is neither 4n+2 nor 4n → non-aromatic (professor’s key, slide 15e).'],
+ ['c3_anion','Anti',4,'1 C=C = 2, + lone pair on C⁻ = 2 → 4 π = 4n → anti-aromatic (professor’s key, slide 14b).'],
+ ['tropylium','A',6,'3 C=C = 6; C⁺ is sp² with an empty p → 6 π → aromatic (professor’s key, slide 14c).'],
+ ['anthracene','A',14,'7 C=C × 2 = 14 π = 4n+2 (n = 3) → aromatic.'],
+ ['diazaanthracene','A',14,'7 double bonds (5 C=C + 2 C=N) = 14 π. Both N are pyridine-type (already in a C=N) → their lone pairs do NOT count. 14 = 4n+2 (n = 3) → aromatic.'],
+ ['benzocyclobutadiene','Anti',8,'4 double bonds = 8 π = 4n → anti-aromatic (professor’s key, slide 14a).'],
+ ['benzocycloheptadiene','Non',10,'5 C=C = 10 π, so Hückel’s number fits, BUT the ring has an sp³ CH₂ → it is not fully conjugated → non-aromatic (slide 15d).'],
+ ['styrene','A',6,'Only the ring counts: 3 C=C = 6 π → aromatic. The vinyl C=C is outside the ring.',B({0:'CH=CH2'}),'Styrene'],
+ ['indole','A',10,'4 C=C = 8, + N–H lone pair = 2 → 10 π = 4n+2 (n = 2) → aromatic.'],
+ ['nmethylindole','A',10,'4 C=C = 8, + N lone pair = 2 → 10 π → aromatic (N–CH3 is like N–H).'],
+ ['imidazole','A',6,'C=C + C=N = 4, + the N–H lone pair = 2 → 6 π → aromatic. The other N (in C=N) is pyridine-type: its lone pair does NOT count.'],
+ ['borole','Anti',4,'2 C=C = 4. Boron has an EMPTY p orbital (0 e⁻) → 4 π = 4n → anti-aromatic.'],
+ ['quinolinium','A',10,'5 double bonds (4 C=C + 1 C=N⁺) = 10 π = 4n+2 (n = 2) → aromatic. The N⁺–H has no lone pair left (it made the N–H bond), so N adds nothing extra.'],
+];
+
+/* ================= Ch 6: substrates, reagents, professor's table ================= */
+const SUBSTR={ // p = product pattern, X = where the nucleophile goes
+ MeBr:{deg:'methyl',st:{chain:['CH3','Br']},nm:'bromomethane',p:'CH3X'},
+ MeI:{deg:'methyl',st:{chain:['CH3','I']},nm:'iodomethane',p:'CH3X'},
+ PrBr:{deg:'1',st:{mol:'PrBr'},nm:'1-bromopropane',p:'CH3CH2CH2X',z:'propene (CH3CH=CH2)',h:'propene (CH3CH=CH2)'},
+ PrI:{deg:'1',st:{mol:'PrI'},nm:'1-iodopropane',p:'CH3CH2CH2X',z:'propene (CH3CH=CH2)',h:'propene (CH3CH=CH2)'},
+ BuCl:{deg:'1',st:{mol:'BuCl'},nm:'1-chlorobutane',p:'CH3CH2CH2CH2X',z:'1-butene (CH2=CHCH2CH3)',h:'1-butene (CH2=CHCH2CH3)'},
+ iBuBr:{deg:'1',st:{mol:'iBuBr'},nm:'1-bromo-2-methylpropane',p:'(CH3)2CHCH2X',z:'2-methylpropene ((CH3)2C=CH2)',h:'2-methylpropene ((CH3)2C=CH2)'},
+ iPrBr:{deg:'2',st:{mol:'iPrBr'},nm:'2-bromopropane',p:'(CH3)2CHX',z:'propene (CH3CH=CH2)',h:'propene (CH3CH=CH2)'},
+ iPrCl:{deg:'2',st:{mol:'iPrCl'},nm:'2-chloropropane',p:'(CH3)2CHX',z:'propene (CH3CH=CH2)',h:'propene (CH3CH=CH2)'},
+ sBuBr:{deg:'2',st:{mol:'sBuBr'},nm:'2-bromobutane',p:'CH3CH(X)CH2CH3',z:'2-butene (CH3CH=CHCH3, more substituted)',h:'1-butene (CH2=CHCH2CH3, less substituted)'},
+ sBuCl:{deg:'2',st:{mol:'sBuCl'},nm:'2-chlorobutane',p:'CH3CH(X)CH2CH3',z:'2-butene (CH3CH=CHCH3, more substituted)',h:'1-butene (CH2=CHCH2CH3, less substituted)'},
+ pent3Cl:{deg:'2',st:{mol:'pent3Cl'},nm:'3-chloropentane',p:'(CH3CH2)2CHX',z:'2-pentene (CH3CH=CHCH2CH3)',h:'2-pentene (CH3CH=CHCH2CH3)'},
+ BrMeBu:{deg:'2',st:{mol:'BrMeBu'},nm:'2-bromo-3-methylbutane',p:'CH3CH(X)CH(CH3)2',z:'2-methyl-2-butene ((CH3)2C=CHCH3, trisubstituted)',h:'3-methyl-1-butene (CH2=CHCH(CH3)2, monosubstituted)'},
+ tBuBr:{deg:'3',st:{mol:'tBuBr'},nm:'2-bromo-2-methylpropane',p:'(CH3)3CX',z:'2-methylpropene ((CH3)2C=CH2)',h:'2-methylpropene ((CH3)2C=CH2)'},
+ tBuCl:{deg:'3',st:{mol:'tBuCl'},nm:'2-chloro-2-methylpropane',p:'(CH3)3CX',z:'2-methylpropene ((CH3)2C=CH2)',h:'2-methylpropene ((CH3)2C=CH2)'},
+ tAmBr:{deg:'3',st:{mol:'tAmBr'},nm:'2-bromo-2-methylbutane',p:'CH3CH2C(CH3)2X',z:'2-methyl-2-butene ((CH3)2C=CHCH3, trisubstituted)',h:'2-methyl-1-butene (CH2=C(CH3)CH2CH3, disubstituted)'},
+ PhBr:{deg:'aryl',st:B({1:'Br'}),nm:'bromobenzene (phenyl halide)'},
+ PhCl:{deg:'aryl',st:B({1:'Cl'}),nm:'chlorobenzene (phenyl halide)'},
+ vinylCl:{deg:'vinyl',st:{mol:'vinylCl'},nm:'chloroethene (vinyl halide)'},
+ isopropenylCl:{deg:'vinyl',st:{mol:'isopropenylCl'},nm:'2-chloropropene (vinyl halide)'},
+};
+const REAG={ // written the way your exams write them; nu = the group that ends up on carbon
+ NaI:{cls:'weak',t:'NaI / acetone',nu:'I'},NaCN:{cls:'weak',t:'NaCN',nu:'CN'},CH3SNa:{cls:'weak',t:'CH3SNa / CH3OH',nu:'SCH3'},EtSNa:{cls:'weak',t:'CH3CH2SNa / CH3CH2OH',nu:'SCH2CH3'},
+ CH3CO2Na:{cls:'weak',t:'CH3CO2Na',nu:'OCOCH3'},NaN3:{cls:'weak',t:'NaN3 / CH3CH2OH',nu:'N3'},
+ NaOH:{cls:'strong',t:'NaOH / CH3CH2OH',nu:'OH'},KOH:{cls:'strong',t:'KOH (alc.)',nu:'OH'},CH3ONa:{cls:'strong',t:'CH3ONa / CH3OH',nu:'OCH3'},C2H5ONa:{cls:'strong',t:'CH3CH2ONa / CH3CH2OH',nu:'OCH2CH3'},
+ tBuOK:{cls:'bulky',t:'(CH3)3COK / (CH3)3COH',nu:'OC(CH3)3'},
+ MeOH25:{cls:'solv',t:'CH3OH only, 25 °C',nu:'OCH3'},H2O25:{cls:'solv',t:'H2O only, 25 °C',nu:'OH'},H2Oheat:{cls:'solv',t:'H2O only, heat (50 °C)',heat:1,nu:'OH'},MeOHheat:{cls:'solv',t:'CH3OH only, heat',heat:1,nu:'OCH3'},
+};
+const DEGL={methyl:'Methyl','1':'1°','2':'2°','3':'3°',aryl:'Phenyl halide',vinyl:'Vinyl halide'};
+const CLSL={weak:'weak base / good nucleophile',strong:'strong (small) base',bulky:'bulky strong base',solv:'solvent only (no base)'};
+const TABLE={weak:{methyl:'SN2','1':'SN2','2':'SN2','3':'NR'},strong:{methyl:'SN2','1':'SN2','2':'E2','3':'E2'},bulky:{methyl:'SN2','1':'E2','2':'E2','3':'E2'}};
+function rxnProduct(sk,rk){const s=SUBSTR[sk],r=REAG[rk],a=rxnAnswer(sk,rk);if(a.m==='NR')return 'N.R.';
+ if(a.m==='SN2'||a.m==='SN1')return s.p.replace('X',r.nu);return (a.m==='E1'||a.e==='Z')?s.z:s.h;}
+// Elimination: alpha = C holding the halogen, beta = carbons next to it that still have an H.
+// Substitution of the C=C each beta would give = carbons on alpha (other than beta) + carbons on beta (other than alpha).
+// Zaitsev = the beta(s) giving the MOST substituted alkene, Hofmann = the LEAST substituted.
+const CHN=['C','CH','CH2','CH3'];
+function elimSites(sk){const s=SUBSTR[sk];if(!s||!s.st||!s.st.mol||!['1','2','3'].includes(s.deg))return null;
+ const m=MOLS[s.st.mol],n=m.a.length,adj=[...Array(n)].map(()=>[]);m.b.forEach(([a,b,o])=>{adj[a].push([b,o||1]);adj[b].push([a,o||1]);});
+ const isC=i=>!m.a[i][2],H=i=>4-adj[i].reduce((t,[,o])=>t+o,0),x=m.a.findIndex(a=>/^(Br|Cl|I)$/.test(a[2]||''));if(x<0)return null;
+ const al=adj[x][0][0],cN=(i,ex)=>adj[i].filter(([j])=>j!==ex&&isC(j)).length;
+ const betas=adj[al].map(([j])=>j).filter(j=>isC(j)&&H(j)>0).map(j=>({i:j,sub:cN(al,j)+cN(j,al)}));if(!betas.length)return null;
+ const mx=Math.max(...betas.map(b=>b.sub)),mn=Math.min(...betas.map(b=>b.sub));
+ return{alpha:al,hal:m.a[x][2],betas,H,z:betas.filter(b=>b.sub===mx).map(b=>b.i),h:betas.filter(b=>b.sub===mn).map(b=>b.i)};}
+function goodSites(sk,rk){const a=rxnAnswer(sk,rk),es=elimSites(sk);if(!es||(a.m!=='E1'&&a.m!=='E2'))return{es,good:[],sl:'',rule:''};
+ const zz=a.m==='E1'||a.e==='Z',good=zz?es.z:es.h;return{es,good,sl:[...new Set(good.map(i=>CHN[es.H(i)]))].join(' or '),rule:zz?'Zaitsev':'Hofmann'};}
+function elimTxt(sk,rk){const a=rxnAnswer(sk,rk),g=goodSites(sk,rk);if(g.good.length)return ` (${g.rule}: H off the ${g.sl})`;
+ return a.m==='E2'?(a.e==='Z'?' (Zaitsev)':' (Hofmann)'):'';}
+function rxnAnswer(sk,rk){const s=SUBSTR[sk],r=REAG[rk];
+ if(s.deg==='aryl'||s.deg==='vinyl')return{m:'NR'};
+ if(r.cls==='solv')return{m:r.heat?'E1':'SN1'};
+ const m=TABLE[r.cls][s.deg];return m==='E2'?{m,e:r.cls==='bulky'?'H':'Z'}:{m};}
+/* ================= exam-style questions (copied from your quizzes / past exams, structures drawn like the exam) ================= */
+const MCQ=[
+ // reactivity: Quiz 5, Exam II F20 / S21 / U21, Sample Exams II & III
+ {k:'sn1-high',g:'mc',tl:'Ch 6 · Reactivity',lab:'Highest SN1 reactivity (chlorides)',q:'Which of the following chlorides has the highest reactivity toward SN1 reaction?',o:[{st:{mol:'iPrCl'}},{st:{mol:'propenylCl'}},{st:{mol:'tAmCl'}},{st:{mol:'PrCl'}}],a:2,why:'SN1 goes through a carbocation: 3° > 2° > 1° > CH3. The 3° chloride wins. The vinyl chloride (Cl on an sp² carbon) does not react at all.'},
+ {k:'sn1-low',g:'mc',tl:'Ch 6 · Reactivity',lab:'Slowest SN1 reactivity (bromides)',q:'Which of the following compounds has the slowest reactivity toward SN1 reaction?',o:[{st:{mol:'iPrBr'}},{st:{mol:'PrBr'}},{st:{mol:'tBuBr'}},{st:{mol:'propenylBr'}}],a:3,why:'The vinyl bromide (Br on an sp² C=C carbon) gives no SN1 at all: that C–Br bond is stronger and shorter (slide 6) → slowest. For the others: 3° > 2° > 1° (carbocation stability).'},
+ {k:'sn2-fast',g:'mc',tl:'Ch 6 · Reactivity',lab:'Highest SN2 reactivity (halides)',q:'Which of the following halides has the highest reactivity toward SN2 reaction?',o:[{st:{mol:'PrCl'}},{st:{mol:'propenylCl'}},{st:{mol:'PrBr'}},{st:{mol:'PrI'}},{st:B({0:'Cl'})}],a:3,why:'Same 1° carbon, so the leaving group decides: R–I > R–Br > R–Cl (I⁻ is the best leaving group). Vinyl and phenyl halides (sp² C–X) do not react.'},
+ {k:'sn2-br',g:'mc',tl:'Ch 6 · Reactivity',lab:'Highest SN2 reactivity (bromides)',q:'Which of the following compounds has the highest reactivity toward SN2 reaction?',o:[{st:{mol:'iPrBr'}},{st:{mol:'propenylBr'}},{st:{mol:'tAmBr'}},{st:{mol:'PrBr'}}],a:3,why:'SN2 = back-side attack, so less crowded is faster: CH3 > 1° > 2° > 3°. The 1° bromide wins. Vinyl halides do not react.'},
+ {k:'sn2-low',g:'mc',tl:'Ch 6 · Reactivity',lab:'Lowest SN2 reactivity (chlorides)',q:'Which of the following chlorides has the lowest reactivity toward SN2 reaction?',o:[{st:{mol:'iPrCl'}},{st:{mol:'propenylCl'}},{st:{mol:'tAmCl'}},{st:{mol:'PrCl'}}],a:1,why:'The vinyl chloride (Cl on an sp² carbon) never does SN2 (or SN1, E1, E2): that C–Cl bond is stronger and shorter (slide 6) → lowest. Of the sp³ ones, 1° > 2° > 3° (the 3° is next lowest: too hindered).'},
+ // nucleophiles, leaving groups, solvents
+ {k:'best-nu',g:'mc',tl:'Ch 6 · Nucleophiles',lab:'Strongest nucleophile',q:'Which species is the strongest nucleophile?',o:['NaOH','CH3CH2SNa','CH3CO2Na','CH3CH2ONa'],a:1,why:'Sulfur nucleophiles (RS⁻) are the strongest: S is big and polarizable (slide 5: CH3S⁻ > HS⁻ > CH3SH > CH3SH2⁺).'},
+ {k:'nu-p',g:'mc',tl:'Ch 6 · Nucleophiles',lab:'N(CH3)3 or P(CH3)3',q:'Which compound is the stronger nucleophile?',o:['N(CH3)3','P(CH3)3'],a:1,why:'Down a group the atom is bigger and more polarizable → better nucleophile: P > N (same idea as S > O).'},
+ {k:'bad-lg',g:'mc',tl:'Ch 6 · Leaving groups',lab:'Not a good leaving group',q:'Which of the following is not a good leaving group?',o:['Cl⁻','CH3CO2⁻','I⁻','CH3CH2O⁻'],a:3,why:'Good leaving groups are weak bases. CH3CH2O⁻ is a strong base (conjugate acid pKa ≈ 16) → bad leaving group. I⁻ > Br⁻ > Cl⁻ and CH3CO2⁻ are fine.'},
+ {k:'aprotic',g:'mc',tl:'Ch 6 · Solvents',lab:'Aprotic solvent (amine vs THF)',q:'Which of the following compounds is aprotic solvent?',o:[{st:{f:'CH3CH2NHCH2CH3'}},{st:{mol:'THF'}}],a:1,why:'Aprotic = no H on O or N (can’t H-bond). THF (a ring ether) has no O–H → aprotic. CH3CH2NHCH2CH3 has an N–H → protic.'},
+ {k:'aprotic2',g:'mc',tl:'Ch 6 · Solvents',lab:'Aprotic solvent (ether vs alcohol)',q:'Which of the following compounds is aprotic solvent?',o:[{st:{mol:'Et2O'}},{st:{mol:'EtOH'}}],a:0,why:'Diethyl ether (CH3CH2OCH2CH3) has no O–H → aprotic. Ethanol has an O–H → protic.'},
+ {k:'solvent-sn2',g:'mc',tl:'Ch 6 · Solvents',lab:'Best solvent for NaCN + 1-bromopropane',q:'Which of the following solvents will best promote a nucleophilic reaction between NaCN and 1-bromopropane?',o:['CH3OH','H2O','CH3CN'],a:2,why:'NaCN + a 1° bromide = SN2. SN2 is fastest in a polar APROTIC solvent like CH3CN: there is no O–H to H-bond to (cage) the CN⁻. CH3OH and H2O are protic.'},
+ // rate and mechanism (Exam II S21)
+ {k:'rate',g:'mc',tl:'Ch 6 · Rate',lab:'Double [RBr] and [NaCN]: rate?',q:'Consider the following reaction. Assuming no other changes, how would it affect the rate if one simultaneously doubled the concentration of n-propyl bromide and sodium cyanide?',show:{L:[{f:'CH3CH2CH2Br'}],top:'NaCN',R:[{f:'CH3CH2CH2CN'}]},o:['It would double the rate','It would increase the rate six times','It would triple the rate','It would increase the rate four times','No effect'],a:3,why:'1° bromide + CN⁻ = SN2: rate = k[RX][Nu⁻] (bimolecular). Doubling both: 2 × 2 = 4 times faster. (SN1 would be rate = k[RX] only.)'},
+ {k:'sn1-int',g:'mc',tl:'Ch 6 · Mechanism',lab:'Most stable intermediate: (CH3)3CBr + H2O',q:'What is the most stable intermediate in the mechanism of the following reaction?',show:{L:[{f:'(CH3)3C–Br'}],top:'H2O',R:[{f:'(CH3)3C–OH'}]},o:['(CH3)3C⁺ (carbocation)','(CH3)3C–OH2⁺ (oxonium ion)','(CH3)3C⁻ (carbanion)','H2O···C(CH3)3···Br (transition state)'],a:1,why:'3° + H2O = SN1 with TWO intermediates: first the carbocation (CH3)3C⁺, then the oxonium ion (CH3)3C–OH2⁺. On the professor’s energy diagram (slide 23) the oxonium ion sits lower → it is the most stable intermediate. The carbocation is the high-energy one made in the slow step. A transition state is never an intermediate.'},
+ // supply the products / complete the reaction (Exam II S21 Q7, F20 Q14c, slide 47)
+ {k:'thiol-ab',g:'mc',tl:'Ch 6 · Supply the products',lab:'CH3SH + CH3CH2ONa → A + B',q:'Supply the missing products. A contains sulfur.',show:{L:[{f:'CH3SH'}],top:'CH3CH2ONa',bot:'CH3CH2OH',R:[{f:'A'},'+',{f:'B'}]},o:['A = CH3SNa,  B = CH3CH2OH','A = CH3SCH2CH3,  B = NaOH','A = CH3CH2SH,  B = CH3ONa','N.R.'],a:0,why:'Acid–base first: CH3SH (pKa ≈ 10.4) is a stronger acid than CH3CH2OH (≈ 16), so CH3CH2O⁻ takes the S–H proton → A = CH3S⁻Na⁺, B = CH3CH2OH.'},
+ {k:'thiol-c',g:'mc',tl:'Ch 6 · Supply the products',lab:'CH3SNa + ethylene oxide, then T2O → C',q:'A = CH3SNa. Supply the missing product C.',show:{L:[{f:'CH3SNa'}],top:['1.',{mol:'epox'}],bot:'2. T2O',R:[{f:'C'}]},o:['CH3SCH2CH2OT','CH3SCH2CH2OH','CH3SCH2CH2T','CH3OCH2CH2ST'],a:0,why:'CH3S⁻ attacks a CH2 of the strained 3-ring (SN2) and opens it → CH3S–CH2CH2–O⁻. Step 2: T2O puts T (tritium) on the O⁻ → CH3SCH2CH2OT. (Slide 47 is the same with D2O → OD.)'},
+ {k:'epox',g:'mc',tl:'Ch 6 · Complete the reaction',lab:'Ethylene oxide + CH3CH2CH2SNa, then H2O',q:'Complete the following reaction by showing the major organic product.',show:{L:[{mol:'epox'}],top:'1. CH3CH2CH2S⁻Na⁺',bot:'2. H2O',R:['?']},o:['CH3CH2CH2SCH2CH2OH','CH3CH2CH2OCH2CH2SH','CH3CH2CH2SCH2CH3','N.R.'],a:0,why:'RS⁻ is an excellent nucleophile: SN2 on a CH2 opens the strained epoxide → RS–CH2CH2–O⁻; H2O then protonates the O⁻ → CH3CH2CH2SCH2CH2OH.'},
+ // conversions (Sample Exams II & III, Exam II F20 / S21 / U21, Sample Exam II)
+ {k:'conv-phenol',g:'conv',tl:'Ch 6 · Conversion',lab:'Phenol → phenyl propyl ether',q:'Show how the following conversion can be carried out using any inorganic reagent.',show:{L:[B({0:'OH'})],mid:'to',R:[B({0:'OCH2CH2CH3'})]},o:['1. NaOH   2. CH3CH2CH2Br','1. CH3CH2CH2Br   2. NaOH','1. NaOH   2. CH3CH2CH2OH','1. (CH3)2CuLi   2. CH3CH2CH2Br'],a:0,why:'Williamson ether synthesis. Step 1: phenol (pKa 9.9) is more acidic than water (15.7), so NaOH is enough → C6H5O⁻Na⁺. Step 2: SN2 on the 1° CH3CH2CH2Br → C6H5OCH2CH2CH3. An alcohol can’t be the electrophile (OH⁻ is a bad leaving group). Not a Gilman reaction.'},
+ {k:'conv-cyclohexanol',g:'conv',tl:'Ch 6 · Conversion',lab:'Cyclohexanol → benzyl cyclohexyl ether',q:'Show how the following conversion can be carried out using any inorganic reagent.',show:{L:[{tpl:'cyclohexane',subs:{0:'OH'}}],mid:'to',R:[{tpl:'cyclohexane',subs:{0:'OCH2C6H5'}}]},o:['1. NaH   2. C6H5CH2Br','1. NaOH   2. C6H5CH2Br','1. NaH   2. C6H5Br','1. C6H5CH2Br   2. NaH'],a:0,why:'Cyclohexanol (pKa ≈ 16–18) is NOT more acidic than water, so NaOH is too weak: use NaH (or Na, NaNH2) → cyclohexoxide. Then SN2 on the 1° benzyl CH2–Br. C6H5Br can’t work: SN2 never happens on a benzene (sp²) carbon.'},
+ {k:'conv-alkene',g:'conv',tl:'Ch 6 · Conversion',lab:'1-Chloro-1-methylcyclohexane → methylenecyclohexane',q:'Show how the following conversion can be carried out using any inorganic reagent.',show:{L:[{mol:'ClMeCy'}],mid:'to',R:[{mol:'CH2Cy'}]},o:['(CH3)3COK / (CH3)3COH','CH3CH2ONa / CH3CH2OH','H2O, heat','CH3CO2Na'],a:0,why:'You need the LESS substituted alkene (C=CH2 outside the ring) → E2 with a bulky base → Hofmann: (CH3)3COK. A small base (CH3CH2ONa) or H2O / heat (E1) gives the Zaitsev alkene, 1-methylcyclohexene. CH3CO2Na (weak base) + 3° → N.R.'},
+ {k:'conv-thioether',g:'conv',tl:'Ch 6 · Conversion',lab:'1-Butanol → butyl methyl sulfide',q:'Carry out the following conversion.',show:{L:[{f:'CH3CH2CH2CH2OH'}],mid:'to',R:[{f:'CH3CH2CH2CH2SCH3'}]},o:['1. CH3SO2Cl (MsCl)   2. CH3SNa','CH3SNa only','1. CH3SNa   2. CH3SO2Cl','1. NaOH   2. CH3SH'],a:0,why:'OH⁻ is a bad leaving group, so R–OH + CH3S⁻ does nothing. First make the OH a mesylate (or tosylate / triflate with TsCl / CF3SO2Cl): R–OMs is an excellent leaving group. Then SN2 with CH3SNa at the 1° carbon.'},
+ {k:'conv-benzylthio',g:'conv',tl:'Ch 6 · Conversion',lab:'Benzyl alcohol → benzyl methyl sulfide',q:'Carry out the following conversion.',show:{L:[B({0:'CH2OH'})],mid:'to',R:[B({0:'CH2SCH3'})]},o:['1. CF3SO2Cl (TfCl)   2. CH3SNa','CH3SNa only','1. CH3SNa   2. CF3SO2Cl','1. NaOH   2. CH3SCH3'],a:0,why:'Same idea: first make the OH a good leaving group (triflate, mesylate or tosylate), then SN2 with CH3S⁻ at the CH2.'},
+ {k:'conv-gilman',g:'conv',tl:'Ch 6 · Conversion',lab:'Benzyl bromide → allylbenzene (Gilman)',q:'Show how the following conversion can be carried out.',show:{L:[B({0:'CH2Br'})],mid:'to',R:[B({0:'CH2CH=CH2'})]},o:['1. Li, then CuI → (C6H5CH2)2CuLi   2. CH2=CHBr','CH2=CH2, heat','1. NaOH   2. CH2=CHBr','CH2=CHBr only'],a:0,why:'A new C–C bond between two carbon groups = Gilman coupling: make the cuprate (C6H5CH2)2CuLi, then R2CuLi + CH2=CH–Br → C6H5CH2–CH=CH2 (professor’s key). SN2 can’t attach a vinyl group, and NaOH would just give the alcohol.'},
+ // Ch 14: Diels–Alder (Quiz 8)
+ {k:'da-ome',g:'mc',tl:'Ch 14 · Diels–Alder',lab:'Butadiene + CH2=CH–OCH3, heat',q:'Complete the following reaction by showing the major organic product.',show:{L:[{mol:'butadiene'}],top:[{mol:'vinylOMe'}],bot:'heat',R:['?']},o:[{st:{tpl:'cyclohexene',subs:{3:'OCH3'}},t:'4-methoxycyclohexene'},{st:{tpl:'cyclohexene',subs:{2:'OCH3'}},t:'3-methoxycyclohexene'},{st:{tpl:'cyclohexene',subs:{1:'OCH3'}},t:'1-methoxycyclohexene'},{st:B({0:'OCH3'}),t:'anisole'}],a:0,why:'Diels–Alder: the new C=C forms between the old C2 and C3 of the diene. OCH3 sits on a former dienophile carbon, 2 carbons away from the new C=C → 4-methoxycyclohexene (never right next to the C=C).'},
+];
+// old saved ids → the exam-style question that tests the same thing
+const MIGRATE={'b:CH3ONa':'rxn:sBuBr:CH3ONa','b:C2H5ONa':'rxn:BrMeBu:C2H5ONa','b:CH3CO2Na':'rxn:iBuBr:CH3CO2Na','b:CH3SNa':'rxn:PrI:CH3SNa',
+ 'c:ether-phenol':'c:conv-phenol','c:ether-pair':'c:conv-phenol','c:ether-sn2':'c:conv-cyclohexanol','c:ether-cyclohexanol':'c:conv-cyclohexanol','c:etoh-cn':'c:conv-thioether'};
+
+/* ================= items ================= */
+const ITEMS={},POOL={name:[],arom:[],rxn:[],mcq:[]};
+const TYPE_LABEL={name:'Name the structure',arom:'Ch 14 · Aromatic, anti-aromatic or non-aromatic?',rxn:'Ch 6 · Complete the reaction',mcq:'Exam question'};
+function add(it){ITEMS[it.id]=it;POOL[it.type].push(it);}
+function buildItems(){
+ NAME_KEYS.forEach(k=>{const c=C[k],sec=COMMON_KEYS.has(k)?1:2;add({id:'n:'+k,type:'name',sec,tl:sec===1?'Name it: common / trade name':'Name it: full name (substituted benzene)',st:c.st,names:c.names,note:c.note,allNames:prepNames(c.names),label:'Name: '+c.names[0]});});
+ AROM.forEach(([k,ans,pi,ex,st,title])=>add({id:'a:'+k,type:'arom',st:st||{tpl:k,subs:{}},title:title||T(k).title,ans,pi,ex,label:'Aromatic? '+(title||T(k).title)}));
+ const cells={};
+ for(const s in SUBSTR)for(const r in REAG){if(REAG[r].cls==='solv'&&SUBSTR[s].deg!=='3')continue;if(r==='NaI'&&(s==='MeI'||s==='PrI'))continue;
+  const d=SUBSTR[s].deg,cell=(d==='aryl'||d==='vinyl'?'av':d)+'|'+REAG[r].cls;(cells[cell]=cells[cell]||[]).push([s,r]);}
+ for(const cell in cells)cells[cell].forEach(([s,r])=>add({id:`rxn:${s}:${r}`,type:'rxn',s,r,w:(cell.startsWith('av')?0.5:1)/cells[cell].length,label:`${SUBSTR[s].nm} + ${REAG[r].t}`}));
+ MCQ.forEach(m=>add({id:'c:'+m.k,type:'mcq',...m,label:m.lab||m.q}));
+}
+const getItem=id=>ITEMS[id]||null;
+function weightedPick(pool,last){if(!pool.length)return null;
+ const ws=pool.map(it=>{if(pool.length>1&&it.id===last)return 0;const s=DB.items[it.id];let w=it.w||1;if(s){if(s.m)w*=5;w*=1+Math.min(s.w,3)*.5;}return w;});
+ const tot=ws.reduce((a,b)=>a+b,0);if(!tot)return pool[0];let r=Math.random()*tot;for(let i=0;i<pool.length;i++){r-=ws[i];if(r<=0)return pool[i];}return pool[pool.length-1];}
+
+/* ================= name checker ================= */
+const MORPHS=('methyl ethyl propyl isopropyl butyl methoxy ethoxy hydroxy amino nitro fluoro chloro bromo iodo formyl methanoyl ethanoyl formylmethyl oxoethyl methylformyl '+
+ 'carboxy sulfo vinyl ethenyl cyano phenyl benzyl acetyl nitrile di tri tetra penta benzene toluene xylene phenol aniline anisole benzaldehyde benzoic benzenesulfonic '+
+ 'benzenesulfonyl sulfonic styrene pyridine pyrrole furan thiophene anthracene benzonitrile cumene acid chloride bromide sulfonyl methanesulfonyl toluenesulfonyl '+
+ 'trifluoromethanesulfonyl trifluoromethanesulfonate mesyl tosyl triflyl mesylate tosylate triflate methanesulfonate picric anisic methane ethene '+
+ 'ether benzenamine tnt tscl mscl trifyl').split(' ');
+const MSORT=[...MORPHS].sort((a,b)=>b.length-a.length);
+const EXACT=new Set(['di','tri','tetra','penta','tnt','tscl','mscl']);
+const PARENTS=new Set(['benzene','toluene','xylene','phenol','aniline','anisole','benzaldehyde','benzoic','benzenesulfonic','styrene','pyridine','pyrrole','furan','thiophene','anthracene','benzonitrile','cumene','benzenamine']);
+const SUBST=new Set(['methyl','ethyl','propyl','isopropyl','butyl','methoxy','ethoxy','hydroxy','amino','nitro','fluoro','chloro','bromo','iodo','formyl','methanoyl','ethanoyl','formylmethyl','oxoethyl','carboxy','sulfo','vinyl','ethenyl','cyano','acetyl']);
+const PGROUP={phenol:'OH',aniline:'NH2',anisole:'OCH3',toluene:'CH3',benzoic:'COOH',benzenesulfonic:'SO3H',benzaldehyde:'CHO',styrene:'CH=CH2'};
+const allow=m=>EXACT.has(m)||m.length<=3?0:m.length<=6?1:m.length<=13?2:3;
+// pairs that must never be fuzzy-matched into each other (a tie counts as wrong)
+const CONFUSE=[['methyl','ethyl'],['chloro','bromo'],['nitro','nitrile'],['benzyl','benzene'],['benzyl','benzoic'],['benzene','benzoic'],['toluene','xylene'],['phenol','phenyl'],['pyrrole','pyridine'],['furan','thiophene'],['propyl','isopropyl']];
+const partners=w=>CONFUSE.filter(p=>p.includes(w)).map(p=>p[0]===w?p[1]:p[0]);
+function dl(a,b){const n=a.length,m=b.length;if(!n)return m;if(!m)return n;const d=[];for(let i=0;i<=n;i++){d.push(new Array(m+1).fill(0));d[i][0]=i;}for(let j=0;j<=m;j++)d[0][j]=j;
+ for(let i=1;i<=n;i++)for(let j=1;j<=m;j++){const c=a[i-1]===b[j-1]?0:1;d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+c);
+  if(i>1&&j>1&&a[i-1]===b[j-2]&&a[i-2]===b[j-1])d[i][j]=Math.min(d[i][j],d[i-2][j-2]+1);}return d[n][m];}
+function segExact(s,i=0){if(i===s.length)return [];for(const w of MSORT){if(s.startsWith(w,i)){const r=segExact(s,i+w.length);if(r)return [w,...r];}}return null;}
+// split a name into locants, o/m/p and letter chunks (spaces, hyphens, commas, brackets ignored inside chunks)
+function tokenize(s){
+ s=String(s).toLowerCase().replace(/[‐-―−]/g,'-').replace(/['’`´]/g,'');
+ const toks=[];let i=0,word='',prevL=false;const flush=()=>{if(word){toks.push({t:'w',v:word});word='';}};
+ while(i<s.length){const rest=s.slice(i);let m;
+  if((m=rest.match(/^\d+(?:\s*[,.]\s*\d+|\s+\d+)*/))){flush();toks.push({t:'loc',v:m[0].split(/[\s,.]+/).join(',')});i+=m[0].length;prevL=false;continue;}
+  if(!prevL){
+   if((m=rest.match(/^n\s*,\s*n(?=[\s-])/))){flush();toks.push({t:'loc',v:'n,n'});i+=m[0].length;continue;}
+   if((m=rest.match(/^(ortho|meta|para)(?![a-z]*?yl\b)/))||(m=rest.match(/^([omp])(?=\s*-|\s+[a-z])/))){flush();toks.push({t:'omp',v:m[1][0]});i+=m[0].length;continue;}
+  }
+  const ch=s[i];
+  if(/[a-z]/.test(ch)){word+=ch;prevL=true;}else prevL=false;
+  i++;}
+ flush();return toks;}
+function variants(n){const out=[n];let m;
+ if((m=n.match(/^([omp])-([a-z].*)$/i))&&!/\d/.test(m[2])&&!/xylene/i.test(m[2]))out.push({o:'2',m:'3',p:'4'}[m[1].toLowerCase()]+'-'+m[2]);
+ if((m=n.match(/^([234])-([a-z].*)$/i))&&!/\d/.test(m[2]))out.push({2:'o',3:'m',4:'p'}[m[1]]+'-'+m[2]);return out;}
+function prepNames(names){const all=[];names.forEach(n=>variants(n).forEach(v=>{if(all.some(a=>a.display.toLowerCase()===v.toLowerCase()))return;
+ all.push({display:v,key:n===names[0],toks:tokenize(v).map(t=>t.t==='w'?{...t,morphs:segExact(t.v)}:t)});}));return all;}
+// align a typed chunk to the answer's morphemes; ≤1 typo per short word, ≤2 per long word; reject if closer to a different real word
+function matchChunk(inp,morphs){const n=inp.length,m=morphs.length,INF=1e9;
+ const dp=Array.from({length:m+1},()=>new Array(n+1).fill(INF)),bk=Array.from({length:m+1},()=>new Array(n+1).fill(-1));dp[0][0]=0;
+ for(let j=1;j<=m;j++){const w=morphs[j-1],al=allow(w),L=w.length;
+  for(let i=1;i<=n;i++)for(let k=Math.max(0,i-L-al);k<=i-Math.max(1,L-al);k++){if(dp[j-1][k]>=INF)continue;const d=dl(inp.slice(k,i),w);if(d>al)continue;const v=dp[j-1][k]+d;if(v<dp[j][i]){dp[j][i]=v;bk[j][i]=k;}}}
+ if(dp[m][n]>=INF)return{ok:false};
+ const segs=[];let i=n;for(let j=m;j>0;j--){const k=bk[j][i];segs.unshift(inp.slice(k,i));i=k;}
+ for(let j=0;j<m;j++){const s=segs[j],w=morphs[j],d=dl(s,w);if(!d)continue;const pw=partners(w);for(const o of MORPHS){if(o===w)continue;const od=dl(s,o);if(od<d||(od===d&&pw.includes(o)))return{ok:false,confused:{seg:s,as:o,want:w}};}}
+ return{ok:true,dist:dp[m][n],segs};}
+function checkName(input,item){const it=tokenize(input||'');if(!it.length)return{ok:false,reasons:['Type a name first.']};let best=null;
+ for(const nm of item.allNames){const at=nm.toks;if(at.length!==it.length)continue;let ok=true,dist=0;
+  for(let k=0;k<at.length&&ok;k++){const a=at[k],b=it[k];if(a.t!==b.t){ok=false;break;}
+   if(a.t==='w'){if(!a.morphs){if(a.v!==b.v)ok=false;continue;}if(b.v!==a.v&&segExact(b.v)){ok=false;break;}/* typed real (different) words: never fuzzy */const r=matchChunk(b.v,a.morphs);if(!r.ok)ok=false;else dist+=r.dist;}
+   else if(a.v!==b.v)ok=false;}
+  if(ok&&(!best||dist<best.dist||(dist===best.dist&&nm.key&&!best.nm.key)))best={nm,dist};}
+ if(best)return{ok:true,typo:best.dist>0,matched:best.nm.display,isKey:best.nm.key};
+ return{ok:false,reasons:diagnose(input,item)};}
+function diagnose(input,item){
+ const it=tokenize(input),at=item.allNames[0].toks,seg=toks=>toks.filter(t=>t.t==='w').flatMap(t=>segExact(t.v)||[t.v]);
+ const im=seg(it),am=seg(at),has=(a,w)=>a.includes(w),R=[];
+ if(it.some(t=>t.t==='w'&&t.v.includes('methylformyl')))R.push('CH2CHO is not “methylformyl”. Read it from the ring outward: CH2 first, then CHO → formylmethyl (professor: ethanoyl) or 2-oxoethyl.');
+ const ip=im.filter(w=>PARENTS.has(w)),ap=am.filter(w=>PARENTS.has(w));
+ if(ip.length>=2)R.push(`Two parent names used (${ip.join(' + ')}): only ONE parent is allowed. The highest-priority group is the parent (C-1); everything else is a prefix.`);
+ const swap=(x,y,msg)=>{if((has(im,x)&&has(am,y)&&!has(am,x))||(has(im,y)&&has(am,x)&&!has(am,y)))R.push(msg);};
+ if(has(im,'benzyl')&&am.some(w=>w.startsWith('benzen')))R.push('benzyl (C6H5CH2–) ≠ benzene (the ring itself).');
+ swap('toluene','xylene','toluene = 1 CH3 on benzene; xylene = 2 CH3.');
+ swap('phenyl','phenol','phenol = C6H5–OH (a parent); phenyl = C6H5– (a substituent).');
+ swap('styrene','benzaldehyde','CHO on the ring (C=O + H) = benzaldehyde; styrene = CH=CH2 (a C=C).');
+ swap('pyrrole','pyridine','pyrrole = 5-ring with N–H; pyridine = 6-ring with N=.');
+ swap('furan','thiophene','furan has O; thiophene has S.');
+ swap('methyl','ethyl','methyl = CH3 (1 C); ethyl = CH2CH3 (2 C).');
+ swap('chloro','bromo','chloro = Cl; bromo = Br.');
+ swap('propyl','isopropyl','isopropyl = CH(CH3)2 (branched); propyl = CH2CH2CH3.');
+ swap('nitro','nitrile','nitro = NO2; nitrile = C≡N.');
+ swap('benzoic','benzene','benzoic acid = ring + COOH; benzene = the ring alone.');
+ for(let k=0;k+1<it.length;k++)if(it[k].t==='loc'&&it[k+1].t==='w'){const s=segExact(it[k+1].v);if(s&&PARENTS.has(s[0])){R.push(`Don't write the parent's number (not “${it[k].v}-${s[0]}”): the parent group is automatically C-1.`);break;}}
+ const pre=im.filter(w=>SUBST.has(w));if(pre.length>1){const so=[...pre].sort();if(pre.join()!==so.join())R.push(`Prefixes must be in alphabetical order (ignore di/tri): ${so.join(', ')}.`);}
+ if(!R.length&&[...im].sort().join()===[...am].sort().join()){
+  const io=it.find(t=>t.t==='omp'),ao=at.find(t=>t.t==='omp');
+  if(io&&ao&&io.v!==ao.v)R.push('o = 1,2 · m = 1,3 · p = 1,4 (count from the parent group).');
+  else{const par=ap[0],g=PGROUP[par];R.push(g?`Number from the parent group: ${g} is always C-1 in ${par==='benzoic'?'benzoic acid':par==='benzenesulfonic'?'benzenesulfonic acid':par}, then go the way that gives the lowest numbers.`:'Check the numbers: lowest set of locants.');}}
+ if(!R.length&&ip.length===1&&ap.length&&ip[0]!==ap[0])R.push(`Wrong parent: it should be ${ap[0]}${PGROUP[ap[0]]?` (${PGROUP[ap[0]]} has the highest priority here: COOH > SO3H > CHO > OH > NH2 > OCH3 > CH3)`:''}.`);
+ if(!R.length)R.push('That name belongs to a different structure. Identify the parent (highest-priority group = C-1) and each group on the ring, then compare with the answer.');
+ return R;}
+
+/* ================= question renderers ================= */
+const app=$('#app');let cleanup=null;
+const setTitle=t=>{$('#ttl').textContent=t;};const setScore=t=>{$('#score').textContent=t;};
+function renderQ(host,item,onRes,onNext,onSkip){
+ const s=DB.items[item.id];
+ host.innerHTML=`<div class="card q"><div class="qtop muted"><span>${fmt(item.tl||TYPE_LABEL[item.type])}</span>${s&&s.m?`<span class="pill">my mistake · ${s.s}/3 right</span>`:''}</div><div class="qbody"></div><div class="skiprow"><button class="skipBtn">Skip →</button></div><div class="fb" hidden></div></div>`;
+ const body=$('.qbody',host),fb=$('.fb',host),sk=$('.skiprow',host);
+ $('.skipBtn',host).onclick=()=>(onSkip||onNext)();
+ const finish=(ok,html,ua)=>{sk.hidden=true;const msg=onRes(ok,ua);fb.hidden=false;fb.className='fb '+(ok?'ok':'bad');
+  fb.innerHTML=`<div class="fbhead">${ok?'✓ Correct':'✗ Not quite'}</div>${html}${msg==='added'?'<p class="muted small">Added to “My mistakes”.</p>':msg==='mastered'?'<p class="muted small">🎉 3 in a row: removed from “My mistakes”.</p>':''}<div class="row"><button class="primary nextBtn">Next →</button></div>`;
+  const nb=$('.nextBtn',fb);nb.onclick=onNext;try{nb.focus({preventScroll:true});}catch(e){}setTimeout(()=>fb.scrollIntoView({block:'nearest',behavior:'smooth'}),30);};
+ QR[item.type](body,item,finish);}
+const lockAll=el=>$$('button,input',el).forEach(b=>b.disabled=true);
+const QR={
+ name(body,item,finish){
+  body.innerHTML=`<div class="struct">${svgOf(item.st,{scale:60})}</div><label class="lbl">Name this compound:</label>
+  <input type="text" class="ans" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="done" placeholder="type the name">
+  <div class="row"><button class="primary chk">Check</button><button class="give">Show answer</button></div>`;
+  const inp=$('.ans',body);let done=false;
+  const go=give=>{if(done)return;const v=inp.value.trim();if(!give&&!v){inp.focus();return;}done=true;lockAll(body);
+   const r=give?{ok:false,reasons:[]}:checkName(v,item);let h='';
+   if(r.ok){if(r.typo)h+=`<p>Correct, spelled: <b>${esc(r.matched)}</b></p>`;if(!r.isKey)h+=`<p>Professor’s key: <b>${esc(item.names[0])}</b></p>`;}
+   else{h+=`<p>Answer: <b>${esc(item.names[0])}</b></p>`;if(r.reasons.length)h+=`<p class="why">Why: ${r.reasons.map(fmt).join('<br>')}</p>`;}
+   if(item.names.length>1)h+=`<p class="muted small">Also accepted: ${item.names.slice(1).map(esc).join(' · ')}</p>`;
+   if(item.note)h+=`<p class="muted small">${fmt(item.note)}</p>`;
+   finish(r.ok,h,give?'(showed answer)':esc(v));};
+  $('.chk',body).onclick=()=>go(false);$('.give',body).onclick=()=>go(true);
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();go(false);}});
+  setTimeout(()=>{try{inp.focus({preventScroll:true});}catch(e){}},60);},
+ arom(body,item,finish){
+  body.innerHTML=`<div class="struct">${svgOf(item.st,{showLP:true,scale:68})}</div><div class="muted" style="text-align:center">${fmt(item.title)}</div>
+  <div class="choices">${['A','Anti','Non'].map(k=>`<button data-k="${k}">${ARL[k]}</button>`).join('')}</div>
+  <label class="lbl">Number of π electrons in the ring:</label><input type="number" class="pi" inputmode="numeric" min="0" max="30" placeholder="e.g. 6">
+  <div class="row"><button class="primary chk">Check</button></div>`;
+  let pick=null;$$('.choices button',body).forEach(b=>b.onclick=()=>{pick=b.dataset.k;$$('.choices button',body).forEach(x=>x.classList.toggle('on',x===b));});
+  const inp=$('.pi',body);
+  const go=()=>{if(!pick){alert('Pick aromatic / anti-aromatic / non-aromatic first.');return;}if(inp.value===''){inp.focus();return;}
+   const n=parseInt(inp.value,10),okA=pick===item.ans,okN=n===item.pi,ok=okA&&okN;lockAll(body);
+   $$('.choices button',body).forEach(x=>{if(x.dataset.k===item.ans)x.classList.add('right');else if(x.dataset.k===pick)x.classList.add('wrong');});
+   let h=`<p>Answer: <b>${ARL[item.ans]}</b>, <b>${item.pi} π electrons</b>${!ok?` (you: ${ARL[pick]}${okA?' ✓':' ✗'}, ${n}${okN?' ✓':' ✗'})`:''}</p><p class="why">${fmt(item.ex)}</p>
+   <p class="muted small">Hückel: cyclic + planar + fully conjugated; 4n+2 (2, 6, 10, 14) = aromatic; 4n (4, 8) = anti-aromatic; non-aromatic only if the ring has an sp³ CH₂ or isn’t cyclic / fully conjugated (or an odd count like 5 π). Professor’s rule: go by the π count, ignore puckering.</p>`;
+   finish(ok,h,`${ARL[pick]}, ${n} π`);};
+  $('.chk',body).onclick=go;inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();go();}});},
+ rxn(body,item,finish){const S=SUBSTR[item.s],Rg=REAG[item.r],ans=rxnAnswer(item.s,item.r),G=goodSites(item.s,item.r),es=elimSites(item.s);
+  const isE=k=>k==='E1'||k==='E2',good=G.good,hal=es?es.hal:'X';
+  const cl=i=>i===es.alpha?`the carbon holding the ${hal}`:es.betas.some(b=>b.i===i)?`a ${CHN[es.H(i)]} next to the C–${hal}`:`a ${CHN[es.H(i)]} that is not next to the C–${hal}`;
+  body.innerHTML=`<div class="qline">Complete the reaction. Which mechanism gives the major product (or N.R.)?</div><div class="rxn"><div class="struct tapwrap">${svgOf(S.st,{scale:58,tap:!!es})}</div>${arrowHTML(Rg.t.split(' / ')[0],Rg.t.split(' / ')[1]||'')}<div class="qmark">?</div></div>
+  <div class="choices m1">${['SN1','SN2','E1','E2','NR'].map(k=>`<button data-k="${k}">${MECH[k]}</button>`).join('')}</div>
+  <div class="tapnote lbl" hidden>Elimination: now tap the carbon that loses an H on the structure. It becomes the other end of the new C=C.</div>
+  <div class="row"><button class="primary chk">Check</button></div>`;
+  let m=null,tap=null,done=false;const wrap=$('.tapwrap',body),circ=()=>$$('.tapc',body);
+  $$('.m1 button',body).forEach(b=>b.onclick=()=>{m=b.dataset.k;$$('.m1 button',body).forEach(x=>x.classList.toggle('on',x===b));
+   const on=isE(m)&&!!es;$('.tapnote',body).hidden=!on;wrap.classList.toggle('tapmode',on);if(!on){tap=null;circ().forEach(c=>c.classList.remove('on'));}});
+  circ().forEach(c=>c.addEventListener('click',()=>{if(done||!wrap.classList.contains('tapmode'))return;tap=+c.dataset.a;circ().forEach(x=>x.classList.toggle('on',x===c));}));
+  $('.chk',body).onclick=()=>{if(!m)return alert('Pick a mechanism first.');if(isE(m)&&es&&tap===null)return alert('Tap the carbon that loses the H (on the structure).');
+   const okC=!isE(ans.m)||!good.length||good.includes(tap),ok=m===ans.m&&okC;done=true;lockAll(body);wrap.classList.remove('tapmode');
+   circ().forEach(c=>{const i=+c.dataset.a;c.classList.remove('on');if(good.includes(i))c.classList.add('good');else if(i===tap)c.classList.add('bad');});
+   const same=es&&es.z.join()===es.h.join();
+   const tapWhy=good.length?(ans.m==='E1'?` E1 gives the more substituted alkene (Zaitsev): the H comes off the ${G.sl} (green).`
+     :ans.e==='Z'?` Small base → Zaitsev: the H comes off the ${G.sl} (green), giving the more substituted C=C.`
+     :` Bulky base → Hofmann: it grabs the easiest H to reach, on the ${G.sl} (green), giving the less substituted C=C.`)+(same?' (Here every choice gives the same alkene.)':''):'';
+   const deg=S.deg,why=deg==='aryl'||deg==='vinyl'?'The C–X carbon is sp² (phenyl/vinyl halide): the C–X bond is stronger and shorter, so no SN1, SN2, E1 or E2 → N.R.'
+    :Rg.cls==='solv'?'3° + solvent only (solvolysis): no strong base, so the 3° carbocation forms → SN1 at low temperature (25 °C), E1 with heat.'+tapWhy
+    :`Professor’s table: ${DEGL[deg]} + ${CLSL[Rg.cls]} → ${ans.m==='NR'?'N.R.':ans.m}.`+(ans.m==='NR'?' A 3° halide gives no SN2 (too hindered), and a weak base can’t do E2.':'')
+     +(good.length?tapWhy:ans.m==='E2'?(ans.e==='Z'?` Small base → Zaitsev: ${S.z}.`:` Bulky base → Hofmann: ${S.h}.`):'');
+   const at=MECH[ans.m]+(good.length?` · H comes off the ${G.sl} (green)`:'');
+   const you=isE(m)&&tap!==null&&es?`${MECH[m]}, tapped ${cl(tap)}`:MECH[m];
+   const tapMsg=isE(m)&&tap!==null&&es&&good.length&&!good.includes(tap)?`<p>You tapped ${fmt(cl(tap))} (red).</p>`:'';
+   finish(ok,`<p>Answer: <b>${fmt(at)}</b></p>${tapMsg}<p>Major product: <b>${fmt(rxnProduct(item.s,item.r))}</b></p><p class="why">${fmt(why)}</p>`,you);};},
+ mcq(body,item,finish){const svgO=item.o.some(o=>typeof o==='object'&&!(o.st&&o.st.f));
+  body.innerHTML=`<div class="prompt" style="font-size:19px;text-align:left">${fmt(item.q)}</div>${item.show?showHTML(item.show):''}
+  <div class="choices ${svgO?'svgopts':''}">${shuffle(item.o.map((o,i)=>i)).map(i=>{const o=item.o[i];return `<button data-i="${i}">${typeof o==='object'?(o.st.f?fmt(o.st.f):svgOf(o.st,{scale:40})):fmt(o).replace(/\s{2,}(?=\d\.\s)/g,'<br>')}</button>`;}).join('')}</div>`;
+  $$('.choices button',body).forEach(b=>b.onclick=()=>{const i=+b.dataset.i,ok=i===item.a;lockAll(body);b.classList.add(ok?'right':'wrong');$$('.choices button',body).find(x=>+x.dataset.i===item.a).classList.add('right');
+   finish(ok,`<p>Answer: <b>${mcqText(item,item.a)}</b></p><p class="why">${fmt(item.why)}</p>`,mcqText(item,i));});},
+};
+const mcqText=(item,i)=>{const o=item.o[i];return typeof o==='object'?(o.t?fmt(o.t):o.st.f?fmt(o.st.f):svgOf(o.st,{scale:24})):fmt(o);};
+// reaction / conversion display, laid out like the exam: structures, reagents on the arrow
+const pieceHTML=x=>x==='+'?'<div class="plus">+</div>':x==='?'?'<div class="qmark">?</div>':x.f?`<div class="fx">${fmt(x.f)}</div>`:`<div class="struct">${svgOf(x,{scale:46})}</div>`;
+const labHTML=x=>Array.isArray(x)?x.map(labHTML).join(' '):typeof x==='string'?fmt(x):`<span class="ast">${svgOf(x,{scale:44})}</span>`;
+const arrowHTML=(top,bot)=>`<div class="arrow"><div>${labHTML(top||'')}</div><div class="arr">⟶</div><div>${labHTML(bot||'')}</div></div>`;
+const showHTML=s=>`<div class="rxn">${s.L.map(pieceHTML).join('')}${s.mid?`<div class="arrow"><div class="to">${esc(s.mid)}</div></div>`:arrowHTML(s.top,s.bot)}${s.R.map(pieceHTML).join('')}</div>`;
+/* ================= pages ================= */
+// shuffled deck: every item once per round (so nothing gets skipped by bad luck), then reshuffle
+function deckPicker(getPool,info){let deck=[],n=0,round=0;
+ return last=>{if(!deck.length){deck=shuffle(getPool());n=deck.length;round++;if(deck.length>1&&deck[0].id===last)deck.push(deck.shift());}
+  const it=deck.shift()||null;if(it&&info)info(`${n-deck.length} of ${n}${round>1?` · round ${round}`:''}`);return it;};}
+const deckInfo=word=>t=>{const e=$('.deckinfo');if(e)e.textContent=`${word} ${t}. Every one comes up once before any repeat.`;};
+function quizPage(host,mode,picker){const sc={c:0,n:0};let last=null;setScore('');
+ const next=()=>{const it=picker(last);if(!it){host.innerHTML='<div class="card">Nothing left here 🎉 <a href="#home">Back to menu</a></div>';return;}last=it.id;
+  renderQ(host,it,ok=>{sc.n++;if(ok)sc.c++;setScore(`✓ ${sc.c}/${sc.n}`);return record(it,ok,mode);},next);};next();}
+function pHome(){setTitle('CHM 215 · Ch 6 & 14');setScore('');const mc=mistakeIds().length;
+ const tile=(h,t,s)=>`<a class="tile" href="#${h}"><b>${t}</b><span>${s}</span></a>`;
+ app.innerHTML=`<div class="grid">
+ ${tile('name1','1a · Common names','Toluene, aniline, pyridine, pyrrole, furan, thiophene, TNT, mesyl chloride… (naming-slide + exam names)')}
+ ${tile('name2','1b · Full names','Substituted benzenes: one parent, locants, prefixes A→Z.')}
+ ${tile('arom','2 · Aromatic?','Aromatic / anti / non + count π electrons.')}
+ ${tile('ch6','3 · Ch 6 + Diels–Alder','Complete the reaction, reactivity, conversions: like the exam.')}
+ ${tile('mistakes',`4 · My mistakes (${mc})`,'Leaves the deck after 3 right in a row.')}
+ ${tile('exam','5 · Exam mode','Timed mixed set, weighted to your misses.')}
+ ${tile('flash','Flashcards','Structure ↔ common name.')}
+ ${tile('rules','Rules cheat sheet','Naming, Hückel, Ch 6 table.')}
+ ${tile('progress','Progress','Accuracy, weakest topics, reset.')}
+ </div>`;}
+function pName1(){setTitle('1a · Common names');app.innerHTML='<div class="muted small deckinfo"></div><div class="qhost"></div>';quizPage($('.qhost'),'name1',deckPicker(()=>POOL.name.filter(i=>i.sec===1),deckInfo('Compound')));}
+function pName2(){setTitle('1b · Full names');app.innerHTML='<div class="muted small deckinfo"></div><div class="qhost"></div>';quizPage($('.qhost'),'name2',deckPicker(()=>POOL.name.filter(i=>i.sec===2),deckInfo('Compound')));}
+function pArom(){setTitle('2 · Aromatic?');app.innerHTML='<div class="muted small deckinfo"></div><div class="qhost"></div>';quizPage($('.qhost'),'arom',deckPicker(()=>POOL.arom,deckInfo('Structure')));}
+function pCh6(){setTitle('3 · Ch 6 + Diels–Alder');
+ app.innerHTML=`<div class="row tabs"><button data-t="rxn">Complete the reaction</button><button data-t="mc">Multiple choice</button><button data-t="conv">Conversions</button></div><div class="muted small deckinfo"></div><div class="qhost"></div>`;
+ const pool=t=>t==='rxn'?POOL.rxn:POOL.mcq.filter(i=>i.g===t);
+ const open=t=>{$$('.tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));const e=$('.deckinfo');if(e)e.textContent='';quizPage($('.qhost'),'ch6',t==='rxn'?l=>weightedPick(pool(t),l):deckPicker(()=>pool(t),deckInfo('Question')));};
+ $$('.tabs button').forEach(b=>b.onclick=()=>open(b.dataset.t));open('rxn');}
+function pMistakes(){setTitle('4 · My mistakes');
+ if(!mistakeIds().length){app.innerHTML='<div class="card">No mistakes yet. Any question you get wrong (in any mode) shows up here. <a href="#home">Back to menu</a></div>';return;}
+ app.innerHTML=`<div class="card small muted">Only questions you got wrong. Wrong answers anywhere in the app land here automatically, and each one leaves after 3 correct answers in a row.</div><div class="qhost"></div>`;
+ quizPage($('.qhost'),'mistakes',last=>{const ids=mistakeIds();if(!ids.length)return null;const pool=ids.map(getItem);
+  const ws=pool.map(it=>(pool.length>1&&it.id===last)?0:4-Math.min(3,DB.items[it.id].s));let r=Math.random()*ws.reduce((a,b)=>a+b,0);
+  for(let i=0;i<pool.length;i++){r-=ws[i];if(r<=0)return pool[i];}return pool[0];});}
+function buildExam(n){const quota=n===15?{name:4,arom:4,rxn:3,mcq:4}:{name:3,arom:2,rxn:2,mcq:3};const out=[],used=new Set();
+ for(const [type,q] of Object.entries(quota)){const pool=POOL[type],mist=shuffle(pool.filter(it=>st0(it.id).m));let k=0;
+  while(k<Math.ceil(q/2)&&mist.length){const it=mist.pop();out.push(it);used.add(it.id);k++;}
+  let g=0;while(k<q&&g++<300){const it=weightedPick(pool.filter(x=>!used.has(x.id)));if(!it)break;out.push(it);used.add(it.id);k++;}}
+ return shuffle(out);}
+function answerHTML(it){switch(it.type){
+ case 'name':return `<b>${esc(it.names[0])}</b>`;
+ case 'arom':return `${ARL[it.ans]}, ${it.pi} π`;case 'rxn':{const a=rxnAnswer(it.s,it.r);return MECH[a.m]+elimTxt(it.s,it.r)+(a.m==='NR'?'':' → '+fmt(rxnProduct(it.s,it.r)));}
+ case 'mcq':return mcqText(it,it.a);}}
+function pExam(){setTitle('5 · Exam mode');setScore('');
+ app.innerHTML=`<div class="card"><h2 style="margin-top:0">Mixed exam</h2><p>Questions from every mode, weighted toward items you’ve missed. A timer runs; you get your score and a list of what you got wrong at the end.</p>
+ <div class="row"><button class="primary" data-n="15">Start: 15 questions</button><button data-n="10">Quick: 10 questions</button></div></div>`;
+ $$('[data-n]',app).forEach(b=>b.onclick=()=>runExam(+b.dataset.n));}
+function runExam(n){const qs=buildExam(n),wrong=[];let i=0,nc=0;const t0=Date.now();
+ app.innerHTML=`<div class="examhead"><b class="qn"></b><span class="timer muted"></span></div><div class="qhost"></div>`;
+ const tick=()=>{const s=Math.floor((Date.now()-t0)/1000);const el=$('.timer');if(el)el.textContent=`⏱ ${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;};
+ const iv=setInterval(tick,1000);tick();cleanup=()=>clearInterval(iv);
+ const next=()=>{if(i>=qs.length)return end();const it=qs[i++];$('.qn').textContent=`Question ${i} / ${qs.length}`;setScore(`✓ ${nc}`);
+  renderQ($('.qhost'),it,(ok,ua)=>{if(ok)nc++;else wrong.push({it,ua});setScore(`✓ ${nc}`);return record(it,ok,'exam');},next,()=>{wrong.push({it,ua:'skipped'});next();});};
+ const end=()=>{clearInterval(iv);cleanup=null;const s=Math.floor((Date.now()-t0)/1000);
+  app.innerHTML=`<div class="card"><h2 style="margin-top:0">Score: ${nc} / ${qs.length} (${Math.round(100*nc/qs.length)}%)</h2><p class="muted">Time: ${Math.floor(s/60)} min ${s%60} s</p>
+  ${wrong.length?`<h3>What you got wrong or skipped</h3><table><tr><th>Question</th><th>You</th><th>Correct</th></tr>${wrong.map(w=>`<tr><td style="text-align:left">${fmt(w.it.label)}</td><td>${w.ua||''}</td><td>${answerHTML(w.it)}</td></tr>`).join('')}</table>`:'<p>Perfect! 🎉</p>'}
+  <div class="row"><button class="primary again">Another exam</button><a class="btn" href="#mistakes">Practise my mistakes</a></div></div>`;
+  $('.again').onclick=()=>runExam(qs.length);};
+ next();}
+function pFlash(){setTitle('Flashcards');setScore('');let deck=FLASH_KEYS.map(k=>C[k]),i=0,dirName=false;
+ app.innerHTML=`<div class="row"><button class="dir">Show: structure first</button><button class="shuf">Shuffle</button></div>
+ <div class="flip"><div class="flipin"><div class="face front"></div><div class="face back"></div></div></div>
+ <div class="row"><button class="prev">◀ Prev</button><button class="primary fl">Flip</button><button class="nxt">Next ▶</button></div><div class="muted small cnt" style="text-align:center"></div>`;
+ const flip=$('.flip');
+ const show=()=>{const c=deck[i],wasOn=flip.classList.contains('on');flip.classList.remove('on');
+  const sv=`<div class="struct">${svgOf(c.st,{scale:68})}</div>`,nm=`<div class="big">${esc(c.names[0])}</div>${c.names.length>1?`<div class="muted small">${c.names.slice(1).map(esc).join(' · ')}</div>`:''}`;
+  $('.front').innerHTML=dirName?nm:sv;setTimeout(()=>{$('.back').innerHTML=dirName?sv:nm;},wasOn?300:0);
+  $('.cnt').textContent=`${i+1} / ${deck.length} · tap the card to flip`;};
+ flip.onclick=()=>flip.classList.toggle('on');$('.fl').onclick=()=>flip.classList.toggle('on');
+ $('.prev').onclick=()=>{i=(i-1+deck.length)%deck.length;show();};$('.nxt').onclick=()=>{i=(i+1)%deck.length;show();};
+ $('.shuf').onclick=()=>{deck=shuffle(deck);i=0;show();};
+ $('.dir').onclick=e=>{dirName=!dirName;e.target.textContent=dirName?'Show: name first':'Show: structure first';show();};show();}
+function pRules(){setTitle('Rules cheat sheet');setScore('');
+ const mini=(st,cap,sc=38)=>`<div>${svgOf(st,{scale:sc})}${fmt(cap)}</div>`;
+ app.innerHTML=`<div class="rules">
+ <div class="card"><h2>o / m / p positions</h2><div class="mini">${mini(C.oxylene.st,'ortho (o) = 1,2')}${mini(C.mxylene.st,'meta (m) = 1,3')}${mini(C.pxylene.st,'para (p) = 1,4')}</div>
+ <p class="small muted">1,3 and 1,5 are the same thing (meta). Flip or rotate the ring: same compound.</p></div>
+ <div class="card"><h2>Parent names</h2><div class="mini">${['toluene','phenol','aniline','anisole','benzaldehyde','benzoic','bsa','styrene','pxylene'].map(k=>mini(C[k].st,C[k].names[0],34)).join('')}</div></div>
+ <div class="card"><h2>Naming rules</h2><ul>
+ <li><b>One parent only.</b> The highest-priority group is the parent and is C-1: <b>COOH > SO<sub>3</sub>H > CHO > OH > NH<sub>2</sub> > OCH<sub>3</sub> > CH<sub>3</sub></b>. NO<sub>2</sub>, F, Cl, Br, I and other alkyls are always prefixes.</li>
+ <li>The parent group is C-1. <b>Don’t write its number</b>: “2-nitrophenol”, not “2-nitro-1-phenol”.</li>
+ <li>Number around the ring to give the <b>lowest numbers</b>.</li>
+ <li>Prefixes in <b>alphabetical order</b> (ignore di-/tri-): bromo, chloro, ethyl, formyl, isopropyl, methoxy, methyl, nitro.</li>
+ <li>o-/m-/p- only when there are 2 groups on the ring.</li>
+ <li>Examples: 5-chloro-2-nitroanisole · 3,5-dibromoaniline · m-formylbenzenesulfonic acid · 2,4,6-trinitrotoluene (TNT) · 2,4,6-trinitrophenol (picric acid) · p-methylanisole (not “p-anisole toluene”).</li>
+ <li>CH<sub>2</sub>CHO = formylmethyl (professor’s key: “ethanoyl”) = 2-oxoethyl. Never “methylformyl”.</li>
+ <li>CHO = formyl = methanoyl (m-formylbenzenesulfonic acid = 3-methanoylbenzenesulfonic acid).</li></ul></div>
+ <div class="card"><h2>Heterocycles</h2><div class="mini">${['pyridine','pyrrole','furan','thiophene'].map(k=>mini(C[k].st,C[k].names[0])).join('')}</div>
+ <p class="small">Pyridine = 6-ring, N= (no H). Pyrrole = 5-ring, N–H. Furan = O. Thiophene = S.</p></div>
+ <div class="card"><h2>Mesyl · Tosyl · Triflyl</h2><div class="mini">${mini(C.g_mesyl.st,'mesyl (Ms) CH3SO2–',30)}${mini(C.g_tosyl.st,'tosyl (Ts) p-CH3C6H4SO2–',24)}${mini(C.g_triflyl.st,'triflyl (Tf) CF3SO2–',30)}</div>
+ <ul><li>-yl chloride = R–SO<sub>2</sub>–Cl (mesyl chloride, tosyl chloride, triflyl chloride).</li>
+ <li>-ate = the ester/anion: ethyl mesylate = CH<sub>3</sub>SO<sub>2</sub>–<b>O</b>–CH<sub>2</sub>CH<sub>3</sub>. Mesylate, tosylate and triflate are excellent leaving groups.</li>
+ <li>R–OH can’t do S<sub>N</sub>2 (OH⁻ is a bad leaving group): make R–OTf / OMs / OTs first, then NaCN etc.</li>
+</ul></div>
+ <div class="card"><h2>Hückel’s rule</h2><ul><li>Aromatic needs: <b>cyclic, planar, fully conjugated</b> + <b>4n+2 π e⁻</b> (2, 6, 10, 14).</li>
+ <li><b>4n</b> (4, 8) → <b>anti-aromatic</b> (e.g. thiepin, 1,4-dithiin: 8 π).</li>
+ <li><b>Non-aromatic</b> only when the ring has an <b>sp³ CH<sub>2</sub></b> or isn’t cyclic / fully conjugated, or the count is odd (5 π radical).</li>
+ <li>Professor’s rule: <b>just count π electrons</b>. Don’t call a ring non-aromatic because the real molecule puckers.</li>
+ <li>Counting: each C=C or C=N = 2. O / S / N–H with no double bond: ONE lone pair counts (2). C⁻ = 2. C⁺ or B = 0 (empty p).</li>
+ <li><b>Pyridine-type N</b> (already in a C=N): its lone pair does NOT count.</li></ul></div>
+ <div class="card"><h2>Ch 6: professor’s table</h2><div style="overflow-x:auto"><table><tr><th></th><th>Methyl</th><th>1°</th><th>2°</th><th>3°</th></tr>
+ <tr><th>Weak base (I⁻, Br⁻, CN⁻, RS⁻, RCO<sub>2</sub>⁻, N<sub>3</sub>⁻)</th><td>S<sub>N</sub>2</td><td>S<sub>N</sub>2</td><td>S<sub>N</sub>2</td><td>N.R.</td></tr>
+ <tr><th>Strong base (OH⁻, RO⁻ like CH<sub>3</sub>ONa / C<sub>2</sub>H<sub>5</sub>ONa, NH<sub>2</sub>⁻)</th><td>S<sub>N</sub>2</td><td>S<sub>N</sub>2</td><td>E2</td><td>E2</td></tr>
+ <tr><th>Bulky base ((CH<sub>3</sub>)<sub>3</sub>COK)</th><td>S<sub>N</sub>2</td><td>E2</td><td>E2</td><td>E2</td></tr>
+ <tr><th>Solvent only (H<sub>2</sub>O, CH<sub>3</sub>OH)</th><td>—</td><td>—</td><td>—</td><td>S<sub>N</sub>1 (25 °C) / E1 (heat)</td></tr></table></div>
+ <ul><li>Phenyl and vinyl halides (C–X on sp² carbon) → <b>N.R.</b></li>
+ <li>E2 with a small strong base → <b>Zaitsev</b> (more substituted alkene). Bulky base → <b>Hofmann</b> (less substituted).</li>
+ <li>Strong or weak base? Look at the conjugate acid: <b>pK<sub>a</sub> ≥ ~15.7 (water) → strong base</b> (CH<sub>3</sub>ONa, C<sub>2</sub>H<sub>5</sub>ONa, NaOH, NaNH<sub>2</sub>, NaH, (CH<sub>3</sub>)<sub>3</sub>COK). Weak base, good nucleophile: CH<sub>3</sub>CO<sub>2</sub>Na (4.8), CH<sub>3</sub>SNa (10.4), NaCN (9.2), NaN<sub>3</sub>, NaI.</li>
+ <li>S<sub>N</sub>2: one step, back-side attack, inversion, rate = k[RX][Nu⁻], CH<sub>3</sub> > 1° > 2° > 3°, R–I > R–Br > R–Cl.</li>
+ <li>S<sub>N</sub>1: two steps (carbocation), racemization, rate = k[RX], 3° > 2° > 1° > CH<sub>3</sub>, faster in polar (protic) solvents.</li>
+ <li>Nucleophiles: CH<sub>3</sub>S⁻ > HS⁻ > CH<sub>3</sub>SH > CH<sub>3</sub>SH<sub>2</sub>⁺ (S is the strongest). Aprotic (no O–H / N–H): CH<sub>3</sub>CN, THF, CH<sub>3</sub>CH<sub>2</sub>OCH<sub>2</sub>CH<sub>3</sub>. Protic: H<sub>2</sub>O, CH<sub>3</sub>OH, CH<sub>3</sub>CH<sub>2</sub>OH, CH<sub>3</sub>CH<sub>2</sub>NHCH<sub>2</sub>CH<sub>3</sub>.</li></ul></div>
+ <div class="card"><h2>Conversions, ethers &amp; Diels–Alder</h2><ul>
+ <li>Phenol + NaOH works (pK<sub>a</sub> 9.9 < 15.7). Cyclohexanol needs NaH / Na / NaNH<sub>2</sub> (NaOH is too weak).</li>
+ <li>Then S<sub>N</sub>2 with a 1° R–Br (e.g. benzyl bromide, CH<sub>3</sub>CH<sub>2</sub>Br). It is <b>not</b> a Gilman reaction. S<sub>N</sub>2 never happens on a benzene carbon.</li>
+ <li>R–OH → R–Nu: OH⁻ is a bad leaving group, so first MsCl / TsCl / CF<sub>3</sub>SO<sub>2</sub>Cl (→ R–OMs / OTs / OTf), then the nucleophile (CH<sub>3</sub>SNa, NaCN…).</li>
+ <li>Epoxide + RS⁻ (then H<sub>2</sub>O): S<sub>N</sub>2 opens the ring → RS–CH<sub>2</sub>CH<sub>2</sub>–OH. New C–C bond (R–X → R–R′): Gilman reagent R<sub>2</sub>CuLi.</li>
+ <li>3° halide → C=CH<sub>2</sub> outside the ring (less substituted): bulky (CH<sub>3</sub>)<sub>3</sub>COK (Hofmann).</li>
+ <li>S<sub>N</sub>1 of (CH<sub>3</sub>)<sub>3</sub>CBr in H<sub>2</sub>O: carbocation, then oxonium ion. On slide 23 the oxonium ion is the lowest-energy (most stable) intermediate.</li>
+ <li>Diels–Alder: diene + dienophile → cyclohexene. Butadiene + CH<sub>2</sub>=CH–OCH<sub>3</sub> → <b>4-methoxycyclohexene</b> (the substituent is 2 carbons from the new C=C, never next to it).</li></ul></div>
+ </div>`;}
+function pProgress(){setTitle('Progress');setScore('');
+ const row=(lbl,k)=>{const m=DB.modes[k]||{a:0,c:0};return `<tr><td style="text-align:left">${lbl}</td><td>${m.a}</td><td>${m.c}</td><td>${m.a?Math.round(100*m.c/m.a)+'%':'—'}</td></tr>`;};
+ const weak=Object.entries(DB.items).filter(([id,s])=>s.w>0&&getItem(id)).sort((a,b)=>(b[1].w-a[1].w)||((a[1].c/a[1].a)-(b[1].c/b[1].a))).slice(0,12);
+ app.innerHTML=`<div class="card"><h2 style="margin-top:0">Accuracy by topic</h2><table><tr><th>Topic</th><th>Tried</th><th>Right</th><th>%</th></tr>
+ ${row('Naming','t:name')}${row('Aromaticity','t:arom')}${row('Complete the reaction','t:rxn')}${row('Ch 6 / Diels–Alder exam questions','t:mcq')}</table>
+ <h2>By mode</h2><table><tr><th>Mode</th><th>Tried</th><th>Right</th><th>%</th></tr>${row('1a · Common names','name1')}${row('1b · Full names','name2')}${row('2 · Aromatic','arom')}${row('3 · Ch 6','ch6')}${row('4 · My mistakes','mistakes')}${row('5 · Exam','exam')}</table></div>
+ <div class="card"><h2 style="margin-top:0">Weakest items</h2>${weak.length?`<table><tr><th>Item</th><th>Wrong</th><th>Right</th></tr>${weak.map(([id,s])=>`<tr><td style="text-align:left">${fmt(getItem(id).label)}</td><td>${s.w}</td><td>${s.c}</td></tr>`).join('')}</table>`:'<p class="muted">No mistakes recorded yet.</p>'}
+ <p>Mistakes deck: <b>${mistakeIds().length}</b> items. <a href="#mistakes">Practise them →</a></p></div>
+ <div class="card"><div class="row"><button class="reset">Reset all progress</button><a class="btn" href="#debug">Run self-tests</a></div></div>`;
+ $('.reset').onclick=()=>{if(confirm('Reset all progress? This clears your scores and your mistakes list.')){try{localStorage.removeItem(SKEY);}catch(e){}DB=null;loadDB();pProgress();}};}
+
+/* ================= self-tests (#debug, also logged to console) ================= */
+function runTests(){const R=[],t=(n,c)=>R.push([n,!!c]);
+ const nm=k=>ITEMS['n:'+k],acc=(k,s)=>checkName(s,nm(k)),adhoc=names=>({names,allNames:prepNames(names)});
+ // accepted answers (incl. alternatives and professor's key)
+ [['quiz8a','4-ethanoyl-2-nitrobenzenesulfonic acid'],['quiz8a','4-formylmethyl-2-nitrobenzenesulfonic acid'],['quiz8a','2-nitro-4-(2-oxoethyl)benzenesulfonic acid'],['quiz8a','4-Ethanoyl-2-nitrobenzene sulfonic acid'],
+  ['pmethylanisole','p-methylanisole'],['pmethylanisole','4-methylanisole'],['pmethylanisole','para-methylanisole'],['pmethylanisole','4-methoxytoluene'],['pmethylanisole','p-methoxytoluene'],['pmethylanisole','P-Methyl anisole'],
+  ['clnitrophenol','4-chloro-2-nitrophenol'],['clnitrophenol','4 chloro 2 nitrophenol'],['brEtBSA','2-bromo-4-ethylbenzenesulfonic acid'],
+  ['mformylbsa','m-formylbenzenesulfonic acid'],['mformylbsa','3-formylbenzenesulfonic acid'],['mformylbsa','3-methanoylbenzenesulfonic acid'],['mformylbsa','meta-formylbenzenesulfonic acid'],
+  ['pisopropylanisole','p-isopropylanisole'],['pisopropylanisole','4-isopropylanisole'],['benzaldehyde','Benzaldehyde'],['oxylene','o-xylene'],['oxylene','ortho-xylene'],['oxylene','1,2-dimethylbenzene'],
+  ['pxylene','p-xylene'],['pxylene','1,4-dimethylbenzene'],['pxylene','4-methyltoluene'],['mnitroanisole','m-nitroanisole'],['mnitroanisole','3-nitroanisole'],
+  ['tosylcl','tosyl chloride'],['tosylcl','p-toluenesulfonyl chloride'],['tosylcl','4-methylbenzenesulfonyl chloride'],
+  ['onitrophenol','o-nitrophenol'],['onitrophenol','2-nitrophenol'],['tnt','2,4,6-trinitrotoluene'],['tnt','2, 4, 6-trinitrotoluene'],['tnt','TNT'],['anisole','methyl phenyl ether'],['clnitroanisole','5-chloro-2-nitroanisole']
+ ].forEach(([k,s])=>t(`accept ${k}: “${s}”`,acc(k,s).ok));
+ // rejected answers (+ expected reason)
+ [['quiz8a','4-methylformyl-2-nitrobenzenesulfonic acid',/methylformyl/],['pmethylanisole','p-anisole toluene',/Two parent/],['pmethylanisole','o-methylanisole',/o = 1,2/],['pmethylanisole','p-ethylanisole',/methyl = CH3/],
+  ['clnitrophenol','5-chloro-1-nitrophenol',/OH is always C-1 in phenol/],['clnitrophenol','2-nitro-4-chlorophenol',/alphabetical/],['onitrophenol','2-nitro-1-phenol',/parent's number/],
+  ['benzaldehyde','styrene',/benzaldehyde/],['oxylene','toluene',/xylene = 2 CH3/],['pxylene','m-xylene',null],['pisopropylanisole','p-propylanisole',/isopropyl/],
+  ['phenol','phenyl',/phenyl/],['bromobenzene','bromobenzyl',/benzyl/],['pyrrole','pyridine',/pyrrole = 5-ring/],['furan','thiophene',/furan has O/],['brEtBSA','2-chloro-4-ethylbenzenesulfonic acid',/bromo/]
+ ].forEach(([k,s,re])=>{const r=acc(k,s);t(`reject ${k}: “${s}”${re?' (reason ok)':''}`,!r.ok&&(!re||re.test(r.reasons.join(' '))));});
+ // typo tolerance: accepted with a spelling note
+ [['anisole','anisol'],['bsa','benzsulfonic acid'],['onitrophenol','o-nitropehnol'],['mformylbsa','m-formylbenzsulfonic acid'],['toluene','tolune'],['pmethylanisole','p-metyl anisole'],['pyrrole','pyrole'],['thiophene','thiophen'],['clnitroanisole','5-cloro-2-nitroanisole']
+ ].forEach(([k,s])=>{const r=acc(k,s);t(`typo ok ${k}: “${s}”`,r.ok&&r.typo);});
+ // never fuzzy-match chemistry-changing words
+ [[['2-methylphenol'],'2-ethylphenol'],[['2-ethylphenol'],'2-methylphenol'],[['chlorobenzene'],'bromobenzene'],[['nitrobenzene'],'nitrilebenzene'],[['benzonitrile'],'benzonitro'],
+  [['bromobenzene'],'bromobenzyl'],[['benzoic acid'],'benzene acid'],[['benzoic acid'],'benzyl acid'],[['toluene'],'xylene'],[['m-xylene'],'m-toluene'],[['phenol'],'phenyl'],
+  [['pyrrole'],'pyridine'],[['pyridine'],'pyrrole'],[['furan'],'thiophene'],[['thiophene'],'furan'],[['4-propylanisole'],'4-isopropylanisole'],[['4-isopropylanisole'],'4-propylanisole'],
+  [['2-nitrophenol'],'2-nitrophenal'],[['benzoic acid'],'benzoyl acid'],[['2-bromotoluene'],'2-bromoxylene'],[['2,4-dinitrophenol'],'2,4-trinitrophenol'],[['2-nitrophenol'],'3-nitrophenol'],[['o-nitrophenol'],'p-nitrophenol']
+ ].forEach(([names,s])=>t(`never fuzzy: “${s}” ≠ “${names[0]}”`,!checkName(s,adhoc(names)).ok));
+ // data integrity
+ Object.values(ITEMS).filter(i=>i.type==='name').forEach(i=>i.allNames.forEach(n=>{t(`segments: ${n.display}`,n.toks.every(x=>x.t!=='w'||x.morphs));const r=checkName(n.display,i);t(`self-accept: ${n.display}`,r.ok&&!r.typo);}));
+ t('new user: mistakes list starts empty',Object.keys(upgradeDB(null).items).length===0);
+ {const old={v:2,modes:{},items:{'n:tnt':{a:0,c:0,s:0,w:0,m:1},'n:phenol':{a:3,c:1,s:0,w:2,m:1},'n:toluene':{a:2,c:2,s:2,w:0,m:1}}},u=upgradeDB(old);
+  t('old save: pre-loaded (never wrong) items un-flagged',u.v===3&&!u.items['n:tnt'].m&&!u.items['n:toluene'].m);t('old save: real mistakes kept',u.items['n:phenol'].m===1&&u.items['n:phenol'].w===2);}
+ t('no pre-loaded list left',typeof PRELOADED==='undefined');
+ t('Ch 6 table: 3° + CH3SNa = N.R.',rxnAnswer('tBuBr','CH3SNa').m==='NR');t('2° + CH3ONa = E2 Zaitsev',rxnAnswer('sBuBr','CH3ONa').e==='Z');
+ t('1° + bulky = E2 Hofmann',rxnAnswer('PrBr','tBuOK').e==='H');t('methyl + bulky = SN2',rxnAnswer('MeBr','tBuOK').m==='SN2');t('3° + H2O heat = E1',rxnAnswer('tAmBr','H2Oheat').m==='E1');
+ t('vinyl + NaOH = N.R.',rxnAnswer('vinylCl','NaOH').m==='NR');t('2° + weak = SN2',rxnAnswer('iPrBr','NaCN').m==='SN2');
+ t('Sample III 1a product',rxnProduct('iBuBr','CH3CO2Na')==='(CH3)2CHCH2OCOCH3');t('Sample III 1b = Hofmann alkene',/3-methyl-1-butene/.test(rxnProduct('BrMeBu','tBuOK')));
+ t('Sample III 1c = Zaitsev alkene',/2-methyl-2-butene/.test(rxnProduct('BrMeBu','KOH')));t('Quiz 5 3b product',rxnProduct('PrI','CH3SNa')==='CH3CH2CH2SCH3');
+ t('S21 9a product',rxnProduct('iPrCl','EtSNa')==='(CH3)2CHSCH2CH3');t('U21 15c = Hofmann 1-butene',/1-butene/.test(rxnProduct('sBuCl','tBuOK')));
+ t('3° + H2O 25 °C → alcohol',rxnProduct('tBuBr','H2O25')==='(CH3)3COH');
+ POOL.rxn.forEach(i=>{const pr=rxnProduct(i.s,i.r);t('product text: '+i.id,typeof pr==='string'&&pr.length>0&&!pr.includes('X')&&!pr.includes('undefined'));});
+ t('no strong/weak base drill left',!POOL.base&&!Object.keys(ITEMS).some(id=>id.startsWith('b:')));
+ POOL.mcq.forEach(m=>{t('answer index ok: '+m.id,m.a>=0&&m.a<m.o.length);t('has exam header: '+m.id,!!m.tl&&!!m.lab);
+  let ok=true;try{const div=document.createElement('div');QR.mcq(div,m,()=>{});ok=div.querySelectorAll('.choices button').length===m.o.length&&(!m.show||!!div.querySelector('.rxn'));}catch(e){ok=false;}t('renders: '+m.id,ok);});
+ Object.values(MIGRATE).forEach(id=>t('migrate target exists: '+id,!!getItem(id)));
+ t('every name is in exactly one section',POOL.name.every(i=>i.sec===1||i.sec===2)&&POOL.name.some(i=>i.sec===1)&&POOL.name.some(i=>i.sec===2));
+ ['tnt','toluene','picric','anisole'].forEach(k=>t('common-name section: '+k,ITEMS['n:'+k].sec===1));['pmethylanisole','quiz8a','brEtBSA','clnitrophenol'].forEach(k=>t('full-name section: '+k,ITEMS['n:'+k].sec===2));
+ ['benzene','phenol','aniline','pyridine','furan','thiophene','pyrrole','chlorobenzene','nitrobenzene','toluene','anisole','oxylene','mxylene','pxylene','benzaldehyde','benzoic','bsa','mformylbsa','manisic',
+  'clnitroanisole','dibromoaniline','tnt','picric','onitrophenol','mbromoanisole','styrene','tosylcl','mscl','msbr','tfcl','etoms','ettf','pmethylanisole','pisopropylanisole','mnitroaniline','pentachloro','brEtBSA','brEtBenzoic','quiz8a','obromophenol','mnitroanisole']
+  .forEach(k=>t('slide/exam name in a naming section: '+k,!!ITEMS['n:'+k]&&(ITEMS['n:'+k].sec===1||ITEMS['n:'+k].sec===2)));
+ [['styrene','vinyl benzene'],['msbr','mesyl bromide'],['msbr','methanesulfonyl bromide'],['tfcl','trifyl chloride'],['toluene','phenyl methane'],['anisole','methoxy benzene']]
+  .forEach(([k,s])=>t(`accept ${k}: “${s}”`,acc(k,s).ok));
+ {const pool=POOL.name.filter(i=>i.sec===1),pk=deckPicker(()=>pool);const seen=new Set();let last=null;for(let i=0;i<pool.length;i++){const it=pk(last);seen.add(it.id);last=it.id;}t('deck shows every common name once per round',seen.size===pool.length);}
+ ['butadiene','ethylene','cyclohexene','ethyleneoxide','mesylate','tosylate','natriflate','grp_ms','grp_ts','grp_tf'].forEach(k=>t('not a naming question (never asked on an exam): '+k,!ITEMS['n:'+k]&&!FLASH_KEYS.includes(k)));
+ t('no ion / sodium-salt names in naming',!POOL.name.some(i=>/\bion\b|sodium/i.test(i.names.join(' '))));
+ {const Z=(s,r)=>goodSites(s,r).good.slice().sort().join();
+  t('tap: 2-bromobutane + CH3ONa → H off the CH2',Z('sBuBr','CH3ONa')==='3');t('tap: 2-bromobutane + (CH3)3COK → H off the CH3',Z('sBuBr','tBuOK')==='0');
+  t('tap: 2-chlorobutane + (CH3)3COK → CH3 (U21 15c)',Z('sBuCl','tBuOK')==='0');
+  t('tap: 2-bromo-3-methylbutane + KOH → the CH (Sample III 1c)',Z('BrMeBu','KOH')==='3');t('tap: 2-bromo-3-methylbutane + bulky → the CH3 (Sample III 1b)',Z('BrMeBu','tBuOK')==='0');
+  t('tap: 2-bromo-2-methylbutane + H2O heat (E1) → the CH2',Z('tAmBr','H2Oheat')==='4');t('tap: 2-bromo-2-methylbutane + bulky → either CH3',Z('tAmBr','tBuOK')==='0,3');
+  t('tap: 2-bromo-2-methylpropane + CH3ONa → any CH3',Z('tBuBr','CH3ONa')==='1,2,3');t('tap: 1-bromopropane + bulky → the middle CH2',Z('PrBr','tBuOK')==='1');
+  t('tap: SN2 answer has no tap target',Z('PrBr','NaCN')==='');}
+ POOL.rxn.filter(i=>['E1','E2'].includes(rxnAnswer(i.s,i.r).m)).forEach(i=>t('tap target exists: '+i.id,goodSites(i.s,i.r).good.length>0&&elimSites(i.s).betas.every(b=>CHN[elimSites(i.s).H(b.i)]!=='C')));
+ {const run=(s,r,mk,a)=>{let res=null;const div=document.createElement('div');QR.rxn(div,{s,r},ok=>{res=ok;});div.querySelector(`.m1 button[data-k="${mk}"]`).click();
+   if(a!==null){const c=div.querySelector(`.tapc[data-a="${a}"]`);c.dispatchEvent(new MouseEvent('click',{bubbles:true}));}div.querySelector('.chk').click();return{res,div};};
+  t('UI: E2 + tap the CH2 of 2-bromobutane (CH3ONa) = right',run('sBuBr','CH3ONa','E2',3).res===true);
+  t('UI: E2 + tap the CH3 of 2-bromobutane (CH3ONa) = wrong',run('sBuBr','CH3ONa','E2',0).res===false);
+  t('UI: E2 + tap the CH3 of 2-bromobutane (bulky base) = right',run('sBuBr','tBuOK','E2',0).res===true);
+  t('UI: E1 + tap the CH2 of 2-bromo-2-methylbutane (H2O heat) = right',run('tAmBr','H2Oheat','E1',4).res===true);
+  t('UI: E1 + tap a CH3 of 2-bromo-2-methylbutane (H2O heat) = wrong',run('tAmBr','H2Oheat','E1',0).res===false);
+  t('UI: SN2 needs no tap',run('PrBr','NaCN','SN2',null).res===true);
+  {const d=document.createElement('div');QR.rxn(d,{s:'sBuBr',r:'CH3ONa'},()=>{});t('UI: no more / less substituted buttons',!/more substituted|less substituted|Zaitsev|Hofmann/.test(d.innerHTML)&&d.querySelectorAll('.tapc').length===4);}
+  {const d=document.createElement('div');document.body.appendChild(d);renderQ(d,getItem('rxn:sBuBr:CH3ONa'),()=>'',()=>{},()=>{});
+   const vis=sel=>getComputedStyle(d.querySelector(sel)).display!=='none';const before=vis('.tapnote')||!vis('.skiprow');
+   d.querySelector('.m1 button[data-k="E2"]').click();const mid=vis('.tapnote');d.querySelector('.tapc[data-a="3"]').dispatchEvent(new MouseEvent('click',{bubbles:true}));d.querySelector('.chk').click();
+   t('UI: tap hint shows only after E1/E2, Skip hides after answering',!before&&mid&&!vis('.skiprow'));d.remove();}
+  {const r=run('sBuBr','CH3ONa','E2',0).div;t('UI: after Check, right carbon green and tapped one red',r.querySelector('.tapc[data-a="3"]').classList.contains('good')&&r.querySelector('.tapc[data-a="0"]').classList.contains('bad'));}}
+ t('anthracene not a naming question or flashcard',!ITEMS['n:anthracene']&&!FLASH_KEYS.includes('anthracene'));
+ t('anthracene still in the aromatic drill',POOL.arom.some(i=>/anthracene/.test(i.id)&&!/diaza/.test(i.id)));
+ t('quinolinium renders',/<svg/.test(svgOf({tpl:'quinolinium',subs:{}})));
+ const html=document.documentElement.outerHTML.toLowerCase();['nicot'+'ine','hydro'+'quinone','naph'+'thalene','napth'+'alene','dm'+'so','dm'+'f','sulf'+'oxide','form'+'amide'].forEach(w=>t('excluded word absent: '+w,!html.includes(w)));
+ return R;}
+function pDebug(){setTitle('Self-tests');setScore('');const R=runTests(),bad=R.filter(r=>!r[1]);
+ console.log(`CHM215 self-tests: ${R.length-bad.length}/${R.length} passed`);bad.forEach(b=>console.warn('FAIL',b[0]));
+ app.innerHTML=`<div class="card"><h2 style="margin-top:0">${R.length-bad.length} / ${R.length} passed</h2>${bad.length?`<p class="fail">Failures:</p><ul>${bad.map(b=>`<li>${esc(b[0])}</li>`).join('')}</ul>`:'<p class="pass">All tests pass.</p>'}
+ <details><summary>All tests</summary><ul class="small">${R.map(r=>`<li class="${r[1]?'pass':'fail'}">${r[1]?'✓':'✗'} <span style="color:var(--fg);font-weight:400">${esc(r[0])}</span></li>`).join('')}</ul></details></div>`;}
+
+/* ================= boot ================= */
+const ROUTES={home:pHome,name:pName1,name1:pName1,name2:pName2,arom:pArom,ch6:pCh6,mistakes:pMistakes,exam:pExam,flash:pFlash,rules:pRules,progress:pProgress,debug:pDebug};
+function go(){if(cleanup){cleanup();cleanup=null;}const r=(location.hash||'#home').slice(1);(ROUTES[r]||pHome)();window.scrollTo(0,0);}
+function applyTheme(){let t=null;try{t=localStorage.getItem('chm215-theme');}catch(e){}if(t)document.documentElement.dataset.theme=t;else delete document.documentElement.dataset.theme;}
+$('#themeBtn').onclick=()=>{const dark=document.documentElement.dataset.theme?document.documentElement.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;
+ try{localStorage.setItem('chm215-theme',dark?'light':'dark');}catch(e){}applyTheme();};
+$('#homeBtn').onclick=()=>{if(location.hash==='#home'||!location.hash)go();else location.hash='#home';};
+applyTheme();buildItems();loadDB();window.addEventListener('hashchange',go);go();
+if(/[?&]test/.test(location.search)){const R=runTests();console.log('self-tests',R.filter(r=>r[1]).length+'/'+R.length);}
+</script>
+</body>
+</html>
