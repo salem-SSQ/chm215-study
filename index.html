@@ -75,9 +75,10 @@ th,td{border:1px solid var(--line);padding:8px;text-align:center;vertical-align:
 th{background:var(--bg)}
 .tabs button.on{background:var(--acc);color:var(--accfg)}
 .flip{perspective:1200px;cursor:pointer;margin:6px 0 10px}
-.flipin{position:relative;min-height:300px;transition:transform .5s;transform-style:preserve-3d;-webkit-transform-style:preserve-3d}
+.flipin{position:relative;display:grid;min-height:300px;transition:transform .5s;transform-style:preserve-3d;-webkit-transform-style:preserve-3d}
 .flip.on .flipin{transform:rotateY(180deg)}
-.face{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;backface-visibility:hidden;-webkit-backface-visibility:hidden;text-align:center}
+.face svg.mol{width:auto;max-height:50vh}
+.face{grid-area:1/1;position:relative;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;backface-visibility:hidden;-webkit-backface-visibility:hidden;text-align:center}
 .face.back{transform:rotateY(180deg)}
 .face .big{font-size:26px;font-weight:700}
 .rules h2{margin:4px 0 8px;font-size:20px}
