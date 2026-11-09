@@ -380,7 +380,7 @@ const AROM=[
  ['thiophene','A',6,'2 C=C = 4, + ONE S lone pair = 2 → 6 π. Aromatic.'],
  ['thiepin','Anti',8,'3 C=C = 6, + one S lone pair = 2 → 8 π. 8 = 4n (n = 2) → anti-aromatic. Professor’s rule: just count π electrons (don’t call it non-aromatic because the real ring puckers).'],
  ['dithiin','Anti',8,'2 C=C = 4, + one lone pair from EACH S = 4 → 8 π = 4n → anti-aromatic (professor’s key, slide 18). Count π only; the puckering of the real molecule doesn’t matter here.'],
- ['dioxin','Anti',8,'2 C=C = 4, + one lone pair from each O = 4 → 8 π = 4n → anti-aromatic (same idea as 1,4-dithiin).'],
+ ['dioxin','Non',8,'2 C=C = 4, + one lone pair from each O = 4 → 8 π = 4n, which would make it anti-aromatic. The ring avoids that: it isn’t flat, so the O lone pairs don’t join the ring → not planar / not fully conjugated → non-aromatic. (Not in the Ch 14 slides. The S version on slide 18, 1,4-dithiin, is marked anti-aromatic.)'],
  ['cp_radical','Non',5,'2 C=C = 4, + 1 unpaired e⁻ = 5 π. 5 is neither 4n+2 nor 4n → non-aromatic (professor’s key, slide 15e).'],
  ['c3_anion','Anti',4,'1 C=C = 2, + lone pair on C⁻ = 2 → 4 π = 4n → anti-aromatic (professor’s key, slide 14b).'],
  ['tropylium','A',6,'3 C=C = 6; C⁺ is sp² with an empty p → 6 π → aromatic (professor’s key, slide 14c).'],
@@ -626,7 +626,7 @@ const QR={
    const n=parseInt(inp.value,10),okA=pick===item.ans,okN=n===item.pi,ok=okA&&okN;lockAll(body);
    $$('.choices button',body).forEach(x=>{if(x.dataset.k===item.ans)x.classList.add('right');else if(x.dataset.k===pick)x.classList.add('wrong');});
    let h=`<p>Answer: <b>${ARL[item.ans]}</b>, <b>${item.pi} π electrons</b>${!ok?` (you: ${ARL[pick]}${okA?' ✓':' ✗'}, ${n}${okN?' ✓':' ✗'})`:''}</p><p class="why">${fmt(item.ex)}</p>
-   <p class="muted small">Hückel: cyclic + planar + fully conjugated; 4n+2 (2, 6, 10, 14) = aromatic; 4n (4, 8) = anti-aromatic; non-aromatic only if the ring has an sp³ CH₂ or isn’t cyclic / fully conjugated (or an odd count like 5 π). Professor’s rule: go by the π count, ignore puckering.</p>`;
+   <p class="muted small">Hückel: cyclic + planar + fully conjugated; 4n+2 (2, 6, 10, 14) = aromatic; 4n (4, 8) = anti-aromatic; non-aromatic only if the ring has an sp³ CH₂ or isn’t cyclic / fully conjugated (or an odd count like 5 π).${item.id==='a:dioxin'?'':' Professor’s rule: go by the π count, ignore puckering.'}</p>`;
    finish(ok,h,`${ARL[pick]}, ${n} π`);};
   $('.chk',body).onclick=go;inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();go();}});},
  rxn(body,item,finish){const S=SUBSTR[item.s],Rg=REAG[item.r],ans=rxnAnswer(item.s,item.r),G=goodSites(item.s,item.r),es=elimSites(item.s);
@@ -767,6 +767,7 @@ function pRules(){setTitle('Rules cheat sheet');setScore('');
  <li><b>4n</b> (4, 8) → <b>anti-aromatic</b> (e.g. thiepin, 1,4-dithiin: 8 π).</li>
  <li><b>Non-aromatic</b> only when the ring has an <b>sp³ CH<sub>2</sub></b> or isn’t cyclic / fully conjugated, or the count is odd (5 π radical).</li>
  <li>Professor’s rule: <b>just count π electrons</b>. Don’t call a ring non-aromatic because the real molecule puckers.</li>
+ <li>Exception: <b>1,4-dioxin</b> (O in place of S, not in the slides) → <b>non-aromatic</b>. 1,4-dithiin (S, slide 18) stays anti-aromatic.</li>
  <li>Counting: each C=C or C=N = 2. O / S / N–H with no double bond: ONE lone pair counts (2). C⁻ = 2. C⁺ or B = 0 (empty p).</li>
  <li><b>Pyridine-type N</b> (already in a C=N): its lone pair does NOT count.</li></ul></div>
  <div class="card"><h2>Ch 6: professor’s table</h2><div style="overflow-x:auto"><table><tr><th></th><th>Methyl</th><th>1°</th><th>2°</th><th>3°</th></tr>
@@ -889,6 +890,8 @@ function runTests(){const R=[],t=(n,c)=>R.push([n,!!c]);
   t('accept p-nitrobenzoic acid as 4-nitrobenzoic acid',g('x_pnitrobenzoic','4-nitrobenzoic acid').ok);}
  t('styrene not a naming question or flashcard',!ITEMS['n:styrene']&&!FLASH_KEYS.includes('styrene'));
  t('styrene still in the aromatic drill (slide 17)',POOL.arom.some(i=>/styrene/i.test(i.id)));
+ t('1,4-dioxin is non-aromatic',ITEMS['a:dioxin']&&ITEMS['a:dioxin'].ans==='Non');
+ t('1,4-dithiin stays anti-aromatic (slide 18)',ITEMS['a:dithiin']&&ITEMS['a:dithiin'].ans==='Anti');
  t('quinolinium renders',/<svg/.test(svgOf({tpl:'quinolinium',subs:{}})));
  const html=document.documentElement.outerHTML.toLowerCase();['nicot'+'ine','hydro'+'quinone','naph'+'thalene','napth'+'alene','dm'+'so','dm'+'f','sulf'+'oxide','form'+'amide'].forEach(w=>t('excluded word absent: '+w,!html.includes(w)));
  return R;}
