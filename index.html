@@ -328,6 +328,26 @@ const C={
  pisopropylanisole:{st:B({0:'CH(CH3)2',3:'OCH3'}),names:['p-isopropylanisole','1-isopropyl-4-methoxybenzene']},
  mnitroanisole:{st:B({0:'NO2',2:'OCH3'}),names:['m-nitroanisole','1-methoxy-3-nitrobenzene']},
  mnitroaniline:{st:B({1:'NO2',3:'NH2'}),names:['m-nitroaniline']},
+ x_pbrphenol:{st:B({0:'OH',3:'Br'}),names:['p-bromophenol','4-bromophenol']},
+ x_mclaniline:{st:B({0:'NH2',2:'Cl'}),names:['m-chloroaniline','3-chloroaniline']},
+ x_onitrotoluene:{st:B({0:'CH3',1:'NO2'}),names:['o-nitrotoluene','2-nitrotoluene','1-methyl-2-nitrobenzene']},
+ x_pnitrobenzoic:{st:B({0:'COOH',3:'NO2'}),names:['p-nitrobenzoic acid','4-nitrobenzoic acid']},
+ x_mbrbenzald:{st:B({0:'CHO',2:'Br'}),names:['m-bromobenzaldehyde','3-bromobenzaldehyde']},
+ x_oclanisole:{st:B({0:'OCH3',1:'Cl'}),names:['o-chloroanisole','2-chloroanisole','1-chloro-2-methoxybenzene']},
+ x_pethylphenol:{st:B({0:'OH',3:'CH2CH3'}),names:['p-ethylphenol','4-ethylphenol']},
+ x_phydroxybenzoic:{st:B({0:'COOH',3:'OH'}),names:['p-hydroxybenzoic acid','4-hydroxybenzoic acid'],note:'COOH beats OH, so the parent is benzoic acid and OH becomes the prefix “hydroxy”.'},
+ x_oaminobsa:{st:B({0:'SO3H',1:'NH2'}),names:['o-aminobenzenesulfonic acid','2-aminobenzenesulfonic acid'],note:'SO3H beats NH2, so the parent is benzenesulfonic acid and NH2 becomes the prefix “amino”.'},
+ x_pmeobenzald:{st:B({0:'CHO',3:'OCH3'}),names:['p-methoxybenzaldehyde','4-methoxybenzaldehyde'],note:'CHO beats OCH3, so the parent is benzaldehyde and OCH3 becomes the prefix “methoxy”.'},
+ x_dinitrophenol:{st:B({0:'OH',1:'NO2',3:'NO2'}),names:['2,4-dinitrophenol']},
+ x_tribromoaniline:{st:B({0:'NH2',1:'Br',3:'Br',5:'Br'}),names:['2,4,6-tribromoaniline']},
+ x_dinitrobenzoic:{st:B({0:'COOH',2:'NO2',4:'NO2'}),names:['3,5-dinitrobenzoic acid']},
+ x_brclphenol:{st:B({0:'OH',1:'Cl',3:'Br'}),names:['4-bromo-2-chlorophenol'],note:'OH is C-1. Lowest numbers are 2,4; then prefixes A→Z: bromo before chloro.'},
+ x_clnitroanisole:{st:B({0:'OCH3',1:'Cl',3:'NO2'}),names:['2-chloro-4-nitroanisole','2-chloro-1-methoxy-4-nitrobenzene']},
+ x_brmebenzald:{st:B({0:'CHO',1:'CH3',3:'Br'}),names:['4-bromo-2-methylbenzaldehyde'],note:'CHO is C-1 (it beats CH3). Number toward CH3 to get 2,4; prefixes A→Z: bromo, methyl.'},
+ x_brnitroaniline:{st:B({0:'NH2',1:'NO2',3:'Br'}),names:['4-bromo-2-nitroaniline']},
+ x_clmeobenzoic:{st:B({0:'COOH',2:'Cl',3:'OCH3'}),names:['3-chloro-4-methoxybenzoic acid'],note:'COOH is C-1. Going toward Cl gives 3,4 (the other way gives 4,5), so Cl = 3, OCH3 = 4.'},
+ x_briprphenol:{st:B({0:'OH',1:'Br',3:'CH(CH3)2'}),names:['2-bromo-4-isopropylphenol']},
+ x_etnitrobsa:{st:B({0:'SO3H',1:'NO2',3:'CH2CH3'}),names:['4-ethyl-2-nitrobenzenesulfonic acid'],note:'Same pattern as your exam’s 2-bromo-4-ethylbenzenesulfonic acid: SO3H is C-1, prefixes A→Z.'},
  pentachloro:{st:B({0:'SO3H',1:'Cl',2:'Cl',3:'Cl',4:'Cl',5:'Cl'}),names:['2,3,4,5,6-pentachlorobenzenesulfonic acid','pentachlorobenzenesulfonic acid']},
  pyridine:{st:{tpl:'pyridine',subs:{}},names:['pyridine']},
  pyrrole:{st:{tpl:'pyrrole',subs:{}},names:['pyrrole']},
@@ -344,7 +364,7 @@ const C={
  g_tosyl:{st:B({0:'CH3',3:'SO2-'}),names:['tosyl (Ts) = p-toluenesulfonyl']},
  g_triflyl:{st:{chain:['CF3','SO2','bond']},names:['triflyl (Tf) = trifluoromethanesulfonyl']},
 };
-const NAME_KEYS=['benzene','msbr','chlorobenzene','bromobenzene','nitrobenzene','phenol','aniline','toluene','anisole','ethylbenzene','benzaldehyde','benzoic','bsa','styrene','oxylene','mxylene','pxylene','mformylbsa','manisic','clnitroanisole','dibromoaniline','tnt','picric','onitrophenol','obromophenol','mbromoanisole','quiz8a','pmethylanisole','clnitrophenol','brEtBSA','brEtBenzoic','pisopropylanisole','mnitroanisole','mnitroaniline','pentachloro','pyridine','pyrrole','furan','thiophene','tosylcl','mscl','etoms','tfcl','ettf'];
+const NAME_KEYS=['benzene','msbr','chlorobenzene','bromobenzene','nitrobenzene','phenol','aniline','toluene','anisole','ethylbenzene','benzaldehyde','benzoic','bsa','styrene','oxylene','mxylene','pxylene','mformylbsa','manisic','clnitroanisole','dibromoaniline','tnt','picric','onitrophenol','obromophenol','mbromoanisole','quiz8a','pmethylanisole','clnitrophenol','brEtBSA','brEtBenzoic','pisopropylanisole','mnitroanisole','mnitroaniline','pentachloro','x_pbrphenol','x_mclaniline','x_onitrotoluene','x_pnitrobenzoic','x_mbrbenzald','x_oclanisole','x_pethylphenol','x_phydroxybenzoic','x_oaminobsa','x_pmeobenzald','x_dinitrophenol','x_tribromoaniline','x_dinitrobenzoic','x_brclphenol','x_clnitroanisole','x_brmebenzald','x_brnitroaniline','x_clmeobenzoic','x_briprphenol','x_etnitrobsa','pyridine','pyrrole','furan','thiophene','tosylcl','mscl','etoms','tfcl','ettf'];
 // Section 1a = common / trade names (one word, like TNT or toluene); 1b = full names of substituted benzenes
 const COMMON_KEYS=new Set(['benzene','msbr','chlorobenzene','bromobenzene','nitrobenzene','phenol','aniline','toluene','anisole','ethylbenzene','benzaldehyde','benzoic','bsa','styrene','oxylene','mxylene','pxylene','tnt','picric','pyridine','pyrrole','furan','thiophene','tosylcl','mscl','etoms','tfcl','ettf']);
 const FLASH_KEYS=['benzene','toluene','phenol','aniline','anisole','benzaldehyde','benzoic','bsa','styrene','oxylene','mxylene','pxylene','chlorobenzene','nitrobenzene','pyridine','pyrrole','furan','thiophene','tnt','picric','manisic','mscl','msbr','tosylcl','tfcl','etoms','ettf','g_mesyl','g_tosyl','g_triflyl'];
@@ -659,7 +679,7 @@ function pHome(){setTitle('CHM 215 · Ch 6 & 14');setScore('');const mc=mistakeI
  const tile=(h,t,s)=>`<a class="tile" href="#${h}"><b>${t}</b><span>${s}</span></a>`;
  app.innerHTML=`<div class="grid">
  ${tile('name1','1a · Common names','Toluene, aniline, pyridine, pyrrole, furan, thiophene, TNT, mesyl chloride… (naming-slide + exam names)')}
- ${tile('name2','1b · Full names','Substituted benzenes: one parent, locants, prefixes A→Z.')}
+ ${tile('name2','1b · Full names','Substituted benzenes: your 16 exam/quiz ones + 20 practice ones in the same style.')}
  ${tile('arom','2 · Aromatic?','Aromatic / anti / non + count π electrons.')}
  ${tile('ch6','3 · Ch 6 + Diels–Alder','Complete the reaction, reactivity, conversions: like the exam.')}
  ${tile('mistakes',`4 · My mistakes (${mc})`,'Leaves the deck after 3 right in a row.')}
@@ -859,6 +879,13 @@ function runTests(){const R=[],t=(n,c)=>R.push([n,!!c]);
   {const r=run('sBuBr','CH3ONa','E2',0).div;t('UI: after Check, right carbon green and tapped one red',r.querySelector('.tapc[data-a="3"]').classList.contains('good')&&r.querySelector('.tapc[data-a="0"]').classList.contains('bad'));}}
  t('anthracene not a naming question or flashcard',!ITEMS['n:anthracene']&&!FLASH_KEYS.includes('anthracene'));
  t('anthracene still in the aromatic drill',POOL.arom.some(i=>/anthracene/.test(i.id)&&!/diaza/.test(i.id)));
+ ['x_pbrphenol','x_mclaniline','x_onitrotoluene','x_pnitrobenzoic','x_mbrbenzald','x_oclanisole','x_pethylphenol','x_phydroxybenzoic','x_oaminobsa','x_pmeobenzald','x_dinitrophenol','x_tribromoaniline','x_dinitrobenzoic','x_brclphenol','x_clnitroanisole','x_brmebenzald','x_brnitroaniline','x_clmeobenzoic','x_briprphenol','x_etnitrobsa'].forEach(k=>t('practice full name in 1b: '+k,!!ITEMS['n:'+k]&&ITEMS['n:'+k].sec===2));
+ t('1b has 36 compounds',POOL.name.filter(i=>i.sec===2).length===36);
+ {const g=(k,s)=>checkName(s,getItem('n:'+k));
+  t('accept 4-hydroxybenzoic acid',g('x_phydroxybenzoic','4-hydroxybenzoic acid').ok);t('reject 4-carboxyphenol (wrong parent)',!g('x_phydroxybenzoic','4-carboxyphenol').ok);
+  t('accept 4-bromo-2-chlorophenol',g('x_brclphenol','4-bromo-2-chlorophenol').ok);t('reject 4-bromo-6-chlorophenol (not lowest numbers)',!g('x_brclphenol','4-bromo-6-chlorophenol').ok);
+  t('accept 3-chloro-4-methoxybenzoic acid',g('x_clmeobenzoic','3-chloro-4-methoxybenzoic acid').ok);t('reject 5-chloro-4-methoxybenzoic acid',!g('x_clmeobenzoic','5-chloro-4-methoxybenzoic acid').ok);
+  t('accept p-nitrobenzoic acid as 4-nitrobenzoic acid',g('x_pnitrobenzoic','4-nitrobenzoic acid').ok);}
  t('quinolinium renders',/<svg/.test(svgOf({tpl:'quinolinium',subs:{}})));
  const html=document.documentElement.outerHTML.toLowerCase();['nicot'+'ine','hydro'+'quinone','naph'+'thalene','napth'+'alene','dm'+'so','dm'+'f','sulf'+'oxide','form'+'amide'].forEach(w=>t('excluded word absent: '+w,!html.includes(w)));
  return R;}
